@@ -119,5 +119,5 @@ export type FieldType = {
 };
 
 export type Coords = {
-    id: number; x: number; y: number 
+    x: number; y: number 
 };
