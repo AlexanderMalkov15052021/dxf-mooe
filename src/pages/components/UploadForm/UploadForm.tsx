@@ -4,12 +4,10 @@ import { ChangeEvent, FormEvent, useRef } from "react";
 
 import DxfParser from 'dxf-parser';
 import { emptyMooe } from "@/helpers/emptyMooe/emptyMooe";
-import { road } from "@/helpers/elements/road";
-import { roadPoint } from "@/helpers/elements/roadPoint";
+import { getMooe } from "@/modules/doc/getMooe";
 // import { getDistTwoPoints } from "@/helpers/math";
 
 // import Worker from "worker-loader!@/workers/yamlWorker.ts";
-
 
 const UploadForm = observer(() => {
 
@@ -17,21 +15,9 @@ const UploadForm = observer(() => {
         store: { isLoading, refFileName, setIsMessageShow, setIsLoading, setLoadingTime, setRefFileName, setMooeDoc },
     } = ConverterStor;
 
-
-
     const refTime = useRef([0, 0]);
 
-
-
-
     const readFile = (evt: ChangeEvent<HTMLInputElement>) => {
-
-
-
-
-
-
-
 
         if (!evt.target.files) return;
 
@@ -71,44 +57,11 @@ const UploadForm = observer(() => {
             try {
                 const dxf = parser.parse(fileStr);
 
-                // console.log("dxf: ", dxf);
+                console.log("dxf: ", dxf);
 
-                const dxfFiltered = dxf?.entities.filter((obj: any) => obj.type === "LINE");
+                const doc = dxf ? getMooe(dxf) : emptyMooe;
 
-                // console.log(dxfFiltered);
-
-                dxfFiltered?.map((obj: any, index: number) => {
-                    const pointX1 = obj.vertices[0].x / 10000
-                    const pointY1 = obj.vertices[0].y / 10000
-
-                    const pointX2 = obj.vertices[1].x / 10000
-                    const pointY2 = obj.vertices[1].y / 10000
-
-                    const startId = 0 + (index * 3);
-                    const endId = 1 + (index * 3);
-                    const roadId = 2 + (index * 3);
-
-                    // const dist = getDistTwoPoints(pointX1, pointY1, pointX2, pointY2);
-
-                    // if (dist > .1) {
-                    (emptyMooe.mLaneMarks as any).push(roadPoint(startId, pointX1, pointY1, Math.PI / 2));
-                    (emptyMooe.mLaneMarks as any).push(roadPoint(endId, pointX2, pointY2, Math.PI / 2));
-
-                    (emptyMooe.mRoads as any).push(road(
-                        startId,
-                        endId,
-                        { x: pointX1, y: pointY1, id: startId },
-                        { x: pointX2, y: pointY2, id: endId },
-                        roadId,
-                        Math.PI / 2,
-                        0
-                    ));
-                    // }
-
-                });
-
-
-                setMooeDoc(JSON.parse(JSON.stringify(emptyMooe)));
+                setMooeDoc(JSON.parse(JSON.stringify(doc)));
 
                 setIsLoading(false);
 
