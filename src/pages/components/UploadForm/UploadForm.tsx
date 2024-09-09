@@ -4,10 +4,7 @@ import { ChangeEvent, FormEvent, useRef } from "react";
 
 import DxfParser from 'dxf-parser';
 import { emptyMooe } from "@/helpers/emptyMooe/emptyMooe";
-import { getMooe } from "@/modules/doc/getMooe";
-// import { getDistTwoPoints } from "@/helpers/math";
-
-// import Worker from "worker-loader!@/workers/yamlWorker.ts";
+import { getMooe } from "@/modules/modify/getMooe";
 
 const UploadForm = observer(() => {
 

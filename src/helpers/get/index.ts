@@ -1,8 +1,8 @@
-export const getDirRoad = (str: string) => {  // "Маршрут 1 ( R1-R2) ( назад )"
+export const getDirRoad = (str: string) => {
 
-    const strMatches = str.match(/вперёд|назад/gi);  // ["назад"] | ["вперёд"] | null
+    const strMatches = str.match(/вперёд|назад/gi);
 
-    const dir = strMatches ? strMatches[0] : null;  // "назад" | "вперёд" | null
+    const dir = strMatches ? strMatches[0] : null;
 
     switch (dir) {
         case "вперёд":
