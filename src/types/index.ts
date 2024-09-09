@@ -34,6 +34,11 @@ export type MooeDoc = {
         mLanes: {
             mAssistedDrawFlag: boolean;
             mAvoidObstacle: boolean;
+            mBezierControl?: {
+                x: number;
+                y: number;
+                z: number;
+            },
             mBindMarkAreaID: number;
             mBorder: {
                 roadwidth_left: number;
@@ -49,7 +54,8 @@ export type MooeDoc = {
             mLanePro: number;
             mLaneType: number;
             mLeftAvoidanceArea: number;
-            mLength: number;
+            mLength: number | null;
+            mMaxCurvature?: number | null;
             mObstacleDistance: number;
             mObstacleWidth: number;
             mPlannerAgain: boolean;
@@ -81,7 +87,7 @@ export type MooeDoc = {
             mLanePro: number;
             mLaneType: number;
             mLeftAvoidanceArea: number;
-            mLength: number;
+            mLength: number | null;
             mObstacleDistance: number;
             mObstacleWidth: number;
             mPlannerAgain: boolean;
@@ -98,7 +104,7 @@ export type MooeDoc = {
                 use_front_realsense_rgb: boolean;
             };
         }[];
-        mLength: number;
+        mLength: number | null;
         mRForbiddenLine: never[];
         mRForbiddenLineID: number;
         mRoadID: number;
@@ -106,7 +112,7 @@ export type MooeDoc = {
         mStartPosition: { x: any; y: any; z: number; }
         | { x: any; y: any; z: number; };
     }[];
-} | null;
+};
 
 export type FieldType = {
     x1: number;
@@ -119,5 +125,5 @@ export type FieldType = {
 };
 
 export type Coords = {
-    x: number; y: number 
+    x: number; y: number
 };

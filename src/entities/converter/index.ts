@@ -1,3 +1,4 @@
+import { emptyMooe } from "@/helpers/emptyMooe/emptyMooe";
 import { MooeDoc } from "@/types";
 import { makeAutoObservable } from "mobx";
 
@@ -7,7 +8,7 @@ class ConverterStor {
     loadingTime: number[] = [0, 0];
     isMessageShow: boolean = false;
     href: string = "";
-    mooeDoc: MooeDoc = null;
+    mooeDoc: MooeDoc = emptyMooe;
 
     constructor() {
         makeAutoObservable(this);

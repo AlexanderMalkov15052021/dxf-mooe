@@ -85,6 +85,7 @@ const UploadForm = observer(() => {
         evt.currentTarget.reset();
         setRefFileName(null);
         setLoadingTime([0, 0]);
+        setMooeDoc(emptyMooe);
     }
 
 
