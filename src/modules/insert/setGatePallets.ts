@@ -1,11 +1,11 @@
-import { distToCahePoint, distToTargrtPoint, maxDist, scaleCorrection } from "@/constants";
+import { distToCahePoint, maxDist, scaleCorrection } from "@/constants";
 import { cachePoint } from "@/helpers/elements/cachePoint";
 import { pallet } from "@/helpers/elements/pallet";
-import { targetPoint } from "@/helpers/elements/targetPoint";
+// import { targetPoint } from "@/helpers/elements/targetPoint";
 import { getAtan2, getDistPointToline } from "@/helpers/math";
 import { MooeDoc } from "@/types";
 
-export const setPalletes = (mooeDoc: MooeDoc, pallete: any, palletLines: any, linesLength: number, palletesLength: number) => {
+export const setGatePallets = (mooeDoc: MooeDoc, pallete: any, palletLines: any, linesLength: number, palletesLength: number) => {
     pallete?.map((obj: any, index: number) => {
 
         const pointX = obj.position.x * scaleCorrection;
@@ -54,21 +54,21 @@ export const setPalletes = (mooeDoc: MooeDoc, pallete: any, palletLines: any, li
             `${obj.text.replace(" ", "")}Cache`
         ));
 
-        mooeDoc.mLaneMarks.push(targetPoint(
-            linesLength + index + palletesLength * 2,
-            pointX + (distToTargrtPoint * Math.cos(angle)),
-            pointY + (distToTargrtPoint * Math.sin(angle)),
-            angle,
-            `${obj.text.replace(" ", "")}Target1`
-        ));
+        // mooeDoc.mLaneMarks.push(targetPoint(
+        //     linesLength + index + palletesLength * 2,
+        //     pointX + (distToTargrtPoint * Math.cos(angle)),
+        //     pointY + (distToTargrtPoint * Math.sin(angle)),
+        //     angle,
+        //     `${obj.text.replace(" ", "")}Target1`
+        // ));
 
-        mooeDoc.mLaneMarks.push(targetPoint(
-            linesLength + index + palletesLength * 3,
-            lineData.line.vertices[1].x * scaleCorrection + (distToTargrtPoint * Math.cos(Math.PI * 2 - angle + Math.PI / 2)),
-            lineData.line.vertices[1].y * scaleCorrection + (distToTargrtPoint * Math.sin(Math.PI * 2 - angle + Math.PI / 2)),
-            Math.PI * 2 - angle + Math.PI / 2,
-            `${obj.text.replace(" ", "")}Target2`
-        ));
+        // mooeDoc.mLaneMarks.push(targetPoint(
+        //     linesLength + index + palletesLength * 3,
+        //     lineData.line.vertices[1].x * scaleCorrection + (distToTargrtPoint * Math.cos(Math.PI * 2 - angle + Math.PI / 2)),
+        //     lineData.line.vertices[1].y * scaleCorrection + (distToTargrtPoint * Math.sin(Math.PI * 2 - angle + Math.PI / 2)),
+        //     Math.PI * 2 - angle + Math.PI / 2,
+        //     `${obj.text.replace(" ", "")}Target2`
+        // ));
 
     });
 }

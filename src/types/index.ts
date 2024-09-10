@@ -1,4 +1,156 @@
+
+export interface MSceneMap {
+    mGridMsg: MGridMsg
+    mMapAttr: MMapAttr
+    version: string
+}
+
+export interface MGridMsg {
+    data: string
+    header: Header
+    info: Info
+}
+
+export interface Header {
+    frame_id: string
+    seq: number
+    stamp: Stamp
+}
+
+export interface Stamp {
+    nsecs: number
+    secs: number
+}
+
+export interface Info {
+    height: number
+    map_load_time: MapLoadTime
+    origin: Origin
+    resolution: number
+    width: number
+}
+
+export interface MapLoadTime {
+    nsecs: number
+    secs: number
+}
+
+export interface Origin {
+    orientation: Orientation
+    position: Position
+}
+
+export interface Orientation {
+    w: number
+    x: number
+    y: number
+    z: number
+}
+
+export interface Position {
+    x: number
+    y: number
+    z: number
+}
+
+export interface MMapAttr {
+    mMapArea: number
+    mMapCrossNum: number
+    mMapFloor: number
+    mMapLandMark: number
+    mMapLaneNum: number
+    mMapLength: number
+    mMapName: string
+    mMapOrigin: MMapOrigin
+    mMapResolution: number
+    mMapVerion: string
+    mMapWidth: number
+}
+
+export interface MMapOrigin {
+    x: number
+    y: number
+    z: number
+}
+
+
+export interface MArea {
+    mAreaID: number
+    mAreaName: string
+    mAreaRect: MAreaRect
+    mAreaSpeedLimmiting: number
+    mAreaType: number
+    mContainsLaneMarks: any[]
+    mSensorControl: MSensorControl
+}
+
+export interface MAreaRect {
+    bottomLeftPoint: BottomLeftPoint
+    bottomRightPoint: BottomRightPoint
+    height: number
+    orientation: Orientation
+    topLeftPoint: TopLeftPoint
+    topRightPoint: TopRightPoint
+    width: number
+}
+
+export interface BottomLeftPoint {
+    x: number
+    y: number
+    z: number
+}
+
+export interface BottomRightPoint {
+    x: number
+    y: number
+    z: number
+}
+
+export interface Orientation {
+    w: number
+    x: number
+    y: number
+    z: number
+}
+
+export interface TopLeftPoint {
+    x: number
+    y: number
+    z: number
+}
+
+export interface TopRightPoint {
+    x: number
+    y: number
+    z: number
+}
+
+export interface MSensorControl {
+    mOpenBottomLaser: boolean
+    mOpenFallPrevention: boolean
+    mOpenFrontCameraRGB: boolean
+    mOpenFrontCamrea: boolean
+}
+
+export interface MCrossRule {
+    area_num: any[]
+    area_num_partial: any[]
+    back_up: any[]
+    cross_stop: CrossStop
+    road_robot_num: any[]
+    robot_num: RobotNum[]
+}
+
+export interface CrossStop { }
+
+export interface RobotNum {
+    num: number
+    road_id: number
+    roads: number[]
+}
+
 export type MooeDoc = {
+    mAreas: MArea[];
     mLaneMarks: {
         mAvoidPointID?: null;
         mBindRoadGroups?: never[];
@@ -112,6 +264,8 @@ export type MooeDoc = {
         mStartPosition: { x: any; y: any; z: number; }
         | { x: any; y: any; z: number; };
     }[];
+    mSceneMap: MSceneMap;
+    mapRotateAngle: number;
 };
 
 export type FieldType = {

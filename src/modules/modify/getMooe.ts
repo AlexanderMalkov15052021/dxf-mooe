@@ -2,7 +2,8 @@ import { ConverterStor } from "@/entities";
 import { IDxf } from "dxf-parser";
 import { setLines } from "../insert/setLines";
 import { setArc } from "../insert/setArc";
-import { setPalletes } from "../insert/setPalletes";
+import { setStreamPallets } from "../insert/setStreamPallets";
+import { setGatePallets } from "../insert/setGatePallets";
 
 export const getMooe = (dxf: IDxf) => {
 
@@ -12,14 +13,17 @@ export const getMooe = (dxf: IDxf) => {
 
     const lines = dxf?.entities.filter((obj: any) => obj.type === "LINE");
     const arc = dxf?.entities.filter((obj: any) => obj.type === "ARC");
-    const pallete = dxf?.entities.filter((obj: any) => obj.type === "MTEXT");
+    const streamPallets = dxf?.entities.filter((obj: any) => obj.type === "MTEXT" && obj.text.slice(0, 2) !== "GT");
+    const gatePallets = dxf?.entities.filter((obj: any) => obj.type === "MTEXT" && obj.text.slice(0, 2) === "GT");
     const palletLines = dxf?.entities.filter((obj: any) => obj.layer.includes("Маршрут к поддону"));
 
     setLines(mooeDoc, lines);
 
-    setArc(mooeDoc, arc, lines.length * 4, pallete.length * 4);
+    setArc(mooeDoc, arc, lines.length * 4, streamPallets.length * 4);
 
-    setPalletes(mooeDoc, pallete, palletLines, lines.length * 4, pallete.length);
+    setStreamPallets(mooeDoc, streamPallets, palletLines, lines.length * 4, streamPallets.length);
+
+    setGatePallets(mooeDoc, gatePallets, palletLines, lines.length * 4 + streamPallets.length * 4, streamPallets.length);
 
     return mooeDoc;
 

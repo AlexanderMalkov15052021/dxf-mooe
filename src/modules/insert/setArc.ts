@@ -37,6 +37,18 @@ export const setArc = (mooeDoc: MooeDoc, arc: any, linesLength: number, palleteL
         const targetX = middleX + (radius * Math.cos(angle));
         const targetY = middleY + (radius * Math.sin(angle));
 
+
+        const road = mooeDoc.mRoads.find(
+            (road: any) =>
+                road.mLanes[0].mEndPos === pointsData[0].point.mLaneMarkID || road.mLanes[0].mStartPos === pointsData[0].point.mLaneMarkID
+        );
+
+        const opositDir = road?.mLanes[0].mDirection === 1 ? 2 : 1;
+
+        const isStartPos = road?.mLanes[0].mStartPos === pointsData[0].point.mLaneMarkID;
+
+        const dir = isStartPos ? opositDir : (road?.mLanes[0].mDirection ?? 0);
+
         mooeDoc.mRoads.push(curveRoad(
             pointsData[0].point.mLaneMarkID,
             pointsData[1].point.mLaneMarkID,
@@ -44,7 +56,7 @@ export const setArc = (mooeDoc: MooeDoc, arc: any, linesLength: number, palleteL
             { x: pointsData[1].point.mLaneMarkXYZW.x, y: pointsData[1].point.mLaneMarkXYZW.y },
             linesLength + index + palleteLength,
             Math.PI / 2,
-            0,
+            dir,
             { x: targetX, y: targetY },
             linesLength + index + palleteLength + arc.length
         ));
