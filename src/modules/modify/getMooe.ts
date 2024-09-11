@@ -19,11 +19,11 @@ export const getMooe = (dxf: IDxf) => {
 
     setLines(mooeDoc, lines);
 
-    setArc(mooeDoc, arc, lines.length * 4, streamPallets.length * 4);
+    setArc(mooeDoc, arc, lines.length * 4 + 1, streamPallets.length * 4);
 
-    setStreamPallets(mooeDoc, streamPallets, palletLines, lines.length * 4, streamPallets.length);
+    setStreamPallets(mooeDoc, streamPallets, palletLines, lines.length * 4 + 1, streamPallets.length);
 
-    setGatePallets(mooeDoc, gatePallets, palletLines, lines.length * 4 + streamPallets.length * 4, streamPallets.length);
+    setGatePallets(mooeDoc, gatePallets, palletLines, lines.length * 4 + 1 + streamPallets.length * 4, streamPallets.length);
 
     return mooeDoc;
 

@@ -1,4 +1,4 @@
-import { distToCahePoint, distToTargrtPoint, maxDist, scaleCorrection } from "@/constants";
+import { distToCachePoint, distToTargrtPoint, maxDist, scaleCorrection } from "@/constants";
 import { cachePoint } from "@/helpers/elements/cachePoint";
 import { pallet } from "@/helpers/elements/pallet";
 import { targetPoint } from "@/helpers/elements/targetPoint";
@@ -48,8 +48,8 @@ export const setStreamPallets = (mooeDoc: MooeDoc, pallete: any, palletLines: an
 
         mooeDoc.mLaneMarks.push(cachePoint(
             linesLength + index + palletesLength,
-            pointX + (distToCahePoint * Math.cos(angle)),
-            pointY + (distToCahePoint * Math.sin(angle)),
+            pointX + (distToCachePoint * Math.cos(angle)),
+            pointY + (distToCachePoint * Math.sin(angle)),
             angle,
             `${obj.text.replace(" ", "")}Cache`
         ));
@@ -66,7 +66,7 @@ export const setStreamPallets = (mooeDoc: MooeDoc, pallete: any, palletLines: an
             linesLength + index + palletesLength * 3,
             lineData.line.vertices[1].x * scaleCorrection + (distToTargrtPoint * Math.cos(Math.PI * 2 + angle + Math.PI / 2)),
             lineData.line.vertices[1].y * scaleCorrection + (distToTargrtPoint * Math.sin(Math.PI * 2 + angle + Math.PI / 2)),
-            Math.PI * 2 - angle + Math.PI / 2,
+            Math.PI * 2 + angle + Math.PI / 2,
             `${obj.text.replace(" ", "")}Target2`
         ));
 

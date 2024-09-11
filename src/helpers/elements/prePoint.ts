@@ -1,11 +1,7 @@
-export const targetPoint = (
+export const prePoint = (
     lastId: number, pointX: number, pointY: number, angle: number, zoneName: string
 ) => {
-
     return {
-        "mAvoidPointID": null,
-        "mBindRoadGroups": [],
-        "mID": null,
         "mIsJockeyEndpoint": false,
         "mLaneMarkDescript": "",
         "mLaneMarkEnName": `${zoneName}`,  // A603col01row21
@@ -16,7 +12,7 @@ export const targetPoint = (
             "length": 0,
             "width": 0
         },
-        "mLaneMarkType": 2,
+        "mLaneMarkType": 7,
         "mLaneMarkWidth": 0.3,
         "mLaneMarkXYZW": {
             "w": Math.cos(angle / 2),
@@ -24,9 +20,6 @@ export const targetPoint = (
             "y": pointY,
             "z": Math.sin(angle / 2)
         },
-        "mMapName": "",
-        "mPrepointID": null,
-        "mTaskListName": "",
         "neighborsID": []
     }
 }
