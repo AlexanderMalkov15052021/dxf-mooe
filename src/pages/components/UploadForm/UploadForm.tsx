@@ -6,6 +6,8 @@ import DxfParser from 'dxf-parser';
 import { emptyMooe } from "@/helpers/emptyMooe/emptyMooe";
 import { getMooe } from "@/modules/modify/getMooe";
 
+import Worker from "worker-loader!@/workers/worker.ts";
+
 const UploadForm = observer(() => {
 
     const {
@@ -47,23 +49,53 @@ const UploadForm = observer(() => {
 
             }, 1000);
 
+
             const fileStr = reader.result as string;
 
-            const parser = new DxfParser();
-
             try {
-                const dxf = parser.parse(fileStr);
 
-                console.log("dxf: ", dxf);
+                if (globalThis.window && globalThis.Worker) {
 
-                const doc = dxf ? getMooe(dxf) : emptyMooe;
+                    console.time("Converting files");
 
-                setMooeDoc(JSON.parse(JSON.stringify(doc)));
+                    const worker = new Worker();
 
-                setIsLoading(false);
+                    worker.postMessage({ result: JSON.parse(JSON.stringify(fileStr)) });
 
-                clearInterval(interval);
+                    worker.onmessage = evt => {
 
+                        setMooeDoc(JSON.parse(JSON.stringify(evt.data.doc)));
+
+                        setIsLoading(false);
+
+                        clearInterval(interval);
+
+                        console.timeEnd("Converting files");
+                    };
+
+                }
+                else {
+                    console.time("Converting files");
+
+                    console.log("Web worker не поддерживается браузером!");
+
+
+                    const parser = new DxfParser();
+
+                    const dxf = parser.parse(fileStr);
+
+                    console.log("dxf: ", dxf);
+
+                    const doc = dxf ? getMooe(dxf) : emptyMooe;
+
+                    setMooeDoc(doc);
+
+                    setIsLoading(false);
+
+                    clearInterval(interval);
+
+                    console.timeEnd("Converting files");
+                }
 
             } catch (err: any) {
                 return console.error(err.stack);
@@ -83,6 +115,8 @@ const UploadForm = observer(() => {
         setRefFileName(null);
         setLoadingTime([0, 0]);
         setMooeDoc(emptyMooe);
+        refTime.current[0] = 0
+        refTime.current[1] = 0
     }
 
 
