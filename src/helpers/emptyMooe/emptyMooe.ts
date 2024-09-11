@@ -1,51 +1,51 @@
 import { MooeDoc } from "@/types";
 
 export const emptyMooe: MooeDoc = {
-    mAreas: [
-        {
-            mAreaID: 363564,
-            mAreaName: "",
-            mAreaRect: {
-                bottomLeftPoint: {
-                    x: 0,
-                    y: 0,
-                    z: 0
-                },
-                bottomRightPoint: {
-                    x: 10,
-                    y: 0,
-                    z: 0
-                },
-                height: 100,
-                orientation: {
-                    w: 1,
-                    x: 0,
-                    y: 0,
-                    z: 0
-                },
-                topLeftPoint: {
-                    x: 0,
-                    y: 10,
-                    z: 0
-                },
-                topRightPoint: {
-                    x: 10,
-                    y: 10,
-                    z: 0
-                },
-                width: 100
-            },
-            mAreaSpeedLimmiting: 0.4,
-            mAreaType: 7,
-            mContainsLaneMarks: [],
-            mSensorControl: {
-                mOpenBottomLaser: true,
-                mOpenFallPrevention: true,
-                mOpenFrontCameraRGB: true,
-                mOpenFrontCamrea: true
-            }
-        }
-    ],
+    // mAreas: [
+    //     {
+    //         mAreaID: 363564,
+    //         mAreaName: "",
+    //         mAreaRect: {
+    //             bottomLeftPoint: {
+    //                 x: 0,
+    //                 y: 0,
+    //                 z: 0
+    //             },
+    //             bottomRightPoint: {
+    //                 x: 10,
+    //                 y: 0,
+    //                 z: 0
+    //             },
+    //             height: 100,
+    //             orientation: {
+    //                 w: 1,
+    //                 x: 0,
+    //                 y: 0,
+    //                 z: 0
+    //             },
+    //             topLeftPoint: {
+    //                 x: 0,
+    //                 y: 10,
+    //                 z: 0
+    //             },
+    //             topRightPoint: {
+    //                 x: 10,
+    //                 y: 10,
+    //                 z: 0
+    //             },
+    //             width: 100
+    //         },
+    //         mAreaSpeedLimmiting: 0.4,
+    //         mAreaType: 7,
+    //         mContainsLaneMarks: [],
+    //         mSensorControl: {
+    //             mOpenBottomLaser: true,
+    //             mOpenFallPrevention: true,
+    //             mOpenFrontCameraRGB: true,
+    //             mOpenFrontCamrea: true
+    //         }
+    //     }
+    // ],
 
 
     mLaneMarks: [],
@@ -82,7 +82,7 @@ export const emptyMooe: MooeDoc = {
                         z: 0
                     }
                 },
-                resolution: 0.08,
+                resolution: 1,
                 width: 8000
             }
         },
@@ -99,7 +99,7 @@ export const emptyMooe: MooeDoc = {
                 y: 0,
                 z: 0
             },
-            mMapResolution: 0.09,
+            mMapResolution: 1,
             mMapVerion: "1.0.0",
             mMapWidth: 100
         },

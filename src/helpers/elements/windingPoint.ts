@@ -1,4 +1,4 @@
-export const pallet = (
+export const windingPoint = (
     lastId: number, pointX: number, pointY: number, angle: number, zoneName: string
 ) => {
     return {

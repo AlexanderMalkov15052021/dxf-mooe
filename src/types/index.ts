@@ -150,7 +150,7 @@ export interface RobotNum {
 }
 
 export type MooeDoc = {
-    mAreas: MArea[];
+    // mAreas: MArea[];
     mLaneMarks: {
         mAvoidPointID?: null;
         mBindRoadGroups?: never[];
