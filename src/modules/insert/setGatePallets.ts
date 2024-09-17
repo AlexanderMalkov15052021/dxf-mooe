@@ -6,7 +6,7 @@ import { windingPoint } from "@/helpers/elements/windingPoint";
 import { getAtan2, getDistPointToline } from "@/helpers/math";
 import { MooeDoc } from "@/types";
 
-export const setGatePallets = (mooeDoc: MooeDoc, pallete: any, palletLines: any, linesLength: number, palletesLength: number) => {
+export const setGatePallets = (mooeDoc: MooeDoc, pallete: any, palletLines: any, linesLength: number, arcsLength: number) => {
     pallete?.map((obj: any, index: number) => {
 
         const pointX = obj.position.x * scaleCorrection;
@@ -48,7 +48,7 @@ export const setGatePallets = (mooeDoc: MooeDoc, pallete: any, palletLines: any,
         ));
 
         mooeDoc.mLaneMarks.push(cachePoint(
-            linesLength + index + palletesLength,
+            linesLength + index + arcsLength,
             pointX + (distToGateCachePoint * Math.cos(angle)),
             pointY + (distToGateCachePoint * Math.sin(angle)),
             angle,
@@ -57,7 +57,7 @@ export const setGatePallets = (mooeDoc: MooeDoc, pallete: any, palletLines: any,
 
         if (obj.text.includes("row 1")) {
             mooeDoc.mLaneMarks.push(targetPoint(
-                linesLength + index + palletesLength * 2,
+                linesLength * 2 + index + arcsLength,
                 lineData.line.vertices[1].x * scaleCorrection + (distToTargrtPoint * Math.cos(Math.PI * 2 + angle - Math.PI / 2)),
                 lineData.line.vertices[1].y * scaleCorrection + (distToTargrtPoint * Math.sin(Math.PI * 2 + angle - Math.PI / 2)),
                 Math.PI * 2 + angle - Math.PI / 2,
@@ -67,7 +67,7 @@ export const setGatePallets = (mooeDoc: MooeDoc, pallete: any, palletLines: any,
 
         if (obj.text.includes("col01row 1")) {
             mooeDoc.mLaneMarks.push(prePoint(
-                linesLength + index + palletesLength * 3,
+                linesLength * 3 + index + arcsLength,
                 lineData.line.vertices[1].x * scaleCorrection + (distToGatePrePoint * 2 * Math.cos(Math.PI * 2 + angle + Math.PI / 2)),
                 lineData.line.vertices[1].y * scaleCorrection + (distToGatePrePoint * 2 * Math.sin(Math.PI * 2 + angle + Math.PI / 2)),
                 Math.PI * 2 + angle - Math.PI / 2,

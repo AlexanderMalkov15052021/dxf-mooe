@@ -165,7 +165,7 @@ export type MooeDoc = {
         { height: number; length: number; width: number; };
         mLaneMarkType: number;
         mLaneMarkWidth: number;
-        mLaneMarkXYZW: { w: number; x: any; y: any; z: number; } |
+        mLaneMarkXYZW: { w: number; x: number; y: number; z: number; } |
         { w: number; x: any; y: any; z: number; } |
         { w: number; x: any; y: any; z: number; } |
         { w: number; x: any; y: any; z: number; } |
@@ -281,3 +281,86 @@ export type FieldType = {
 export type Coords = {
     x: number; y: number
 };
+
+export interface BezierCurve {
+    mBelongJunctionID: number
+    mEndPosition: MEndPosition
+    mLForbiddenLine: any[]
+    mLForbiddenLineID: number
+    mLaneCount: number
+    mLanes: MLane[]
+    mLength: number
+    mRForbiddenLine: any[]
+    mRForbiddenLineID: number
+    mRoadID: number
+    mRoadName: string
+    mStartPosition: MStartPosition
+}
+
+export interface MEndPosition {
+    x: number
+    y: number
+    z: number
+}
+
+export interface MLane {
+    mAssistedDrawFlag: boolean
+    mAvoidObstacle: boolean
+    mBindMarkAreaID: number
+    mBorder: MBorder
+    mDataPath: any[]
+    mDelta: number
+    mDirection: number
+    mEndPos: number
+    mGoalAgain: boolean
+    mLaneDescript: string
+    mLaneID: number
+    mLaneName: string
+    mLanePro: number
+    mLaneType: number
+    mLeftAvoidanceArea: number
+    mLength: number
+    mMaxCurvature: number
+    mObstacleDistance: number
+    mObstacleWidth: number
+    mPlannerAgain: boolean
+    mPointOfInterest: any[]
+    mPosID: number
+    mRightAvoidanceArea: number
+    mSpeed: number
+    mStartPos: number
+    mWidth: number
+    m_BezierControl1: MBezierControl1
+    m_BezierControl2: MBezierControl2
+    usesensor: Usesensor
+}
+
+export interface MBorder {
+    roadwidth_left: number
+    roadwidth_right: number
+}
+
+export interface MBezierControl1 {
+    x: number
+    y: number
+    z: number
+}
+
+export interface MBezierControl2 {
+    x: number
+    y: number
+    z: number
+}
+
+export interface Usesensor {
+    fall_arrest_system: boolean
+    use_bottom_laser: boolean
+    use_front_realsense: boolean
+    use_front_realsense_rgb: boolean
+}
+
+export interface MStartPosition {
+    x: number
+    y: number
+    z: number
+}
