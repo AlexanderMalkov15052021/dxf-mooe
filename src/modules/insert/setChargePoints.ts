@@ -1,12 +1,12 @@
-import { distToTargrtPoint, maxDist, scaleCorrection } from "@/constants";
+import { distToTargrtPoint, firstPointId, maxDist, scaleCorrection } from "@/constants";
 import { prePoint } from "@/helpers/elements/prePoint";
 import { targetPoint } from "@/helpers/elements/targetPoint";
 import { windingPoint } from "@/helpers/elements/windingPoint";
 import { getAtan2, getDistPointToline } from "@/helpers/math";
 import { MooeDoc } from "@/types";
 
-export const setChargePoints = (mooeDoc: MooeDoc, chargePoints: any, chargeLines: any, linesLength: number, palletesLength: number) => {
-    chargePoints?.map((obj: any, index: number) => {
+export const setChargePoints = (mooeDoc: MooeDoc, chargePoints: any, chargeLines: any) => {
+    chargePoints?.map((obj: any) => {
 
         const pointX = obj.position.x * scaleCorrection;
         const pointY = obj.position.y * scaleCorrection;
@@ -39,7 +39,7 @@ export const setChargePoints = (mooeDoc: MooeDoc, chargePoints: any, chargeLines
         );
 
         mooeDoc.mLaneMarks.push(windingPoint(
-            linesLength + index,
+            mooeDoc.mLaneMarks.length + firstPointId,
             pointX,
             pointY,
             angle,
@@ -47,28 +47,28 @@ export const setChargePoints = (mooeDoc: MooeDoc, chargePoints: any, chargeLines
         ));
 
         mooeDoc.mLaneMarks.push(targetPoint(
-            linesLength + index + palletesLength * 2,
+            mooeDoc.mLaneMarks.length + firstPointId,
             pointX + (distToTargrtPoint * Math.cos(angle)),
             pointY + (distToTargrtPoint * Math.sin(angle)),
             angle,
-            `${obj.text.replace(" ", "")}Target1`
+            `${obj.text.replace(" ", "")}检`
         ));
 
         mooeDoc.mLaneMarks.push(targetPoint(
-            linesLength + index + palletesLength * 3,
-            lineData.line.vertices[1].x * scaleCorrection + (distToTargrtPoint * Math.cos(Math.PI * 2 + angle + Math.PI / 2)),
-            lineData.line.vertices[1].y * scaleCorrection + (distToTargrtPoint * Math.sin(Math.PI * 2 + angle + Math.PI / 2)),
-            Math.PI * 2 + angle + Math.PI / 2,
-            `${obj.text.replace(" ", "")}Target2`
+            mooeDoc.mLaneMarks.length + firstPointId,
+            lineData.line.vertices[1].x * scaleCorrection - (distToTargrtPoint * Math.cos(angle + Math.PI / 2)),
+            lineData.line.vertices[1].y * scaleCorrection - (distToTargrtPoint * Math.sin(angle + Math.PI / 2)),
+            angle - Math.PI / 2,
+            `${obj.text.replace(" ", "")}前置点`
         ));
 
-        if (obj.text.includes("Charge1")) {
+        if (obj.text.includes("Charge")) {
             mooeDoc.mLaneMarks.push(prePoint(
-                linesLength + index + palletesLength * 4,
-                lineData.line.vertices[1].x * scaleCorrection + (distToTargrtPoint * 2 * Math.cos(Math.PI * 2 + angle - Math.PI / 2)),
-                lineData.line.vertices[1].y * scaleCorrection + (distToTargrtPoint * 2 * Math.sin(Math.PI * 2 + angle - Math.PI / 2)),
-                Math.PI * 2 + angle + Math.PI / 2,
-                `${obj.text}entrance`
+                mooeDoc.mLaneMarks.length + firstPointId,
+                lineData.line.vertices[1].x * scaleCorrection + (distToTargrtPoint * 2 * Math.cos(angle - Math.PI / 2)),
+                lineData.line.vertices[1].y * scaleCorrection + (distToTargrtPoint * 2 * Math.sin(angle - Math.PI / 2)),
+                angle + Math.PI / 2,
+                `${obj.text.split("col")[0]}entrance`
             ));
         }
 

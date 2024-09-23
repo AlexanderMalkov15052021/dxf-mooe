@@ -1,8 +1,8 @@
 import { Coords } from "@/types"
 
-export const bezierCurve = (
+export const quadraticSpline = (
     startId: number, endId: number, startPoint: Coords, endPoint: Coords, id: number, angle: number, roadDir: number,
-    roadID: number, controlPoint1: any, controloint2: any
+    roadID: number, controlPoint: any
 ) => {
     return {
         "mBelongJunctionID": -1,
@@ -18,6 +18,11 @@ export const bezierCurve = (
             {
                 "mAssistedDrawFlag": false,
                 "mAvoidObstacle": false,
+                "mBezierControl": {
+                    "x": controlPoint.x,
+                    "y": controlPoint.y,
+                    "z": controlPoint.z
+                },
                 "mBindMarkAreaID": -1,
                 "mBorder": {
                     "roadwidth_left": 0,
@@ -32,10 +37,10 @@ export const bezierCurve = (
                 "mLaneID": id,
                 "mLaneName": "",
                 "mLanePro": 0,
-                "mLaneType": 2,
+                "mLaneType": 1,
                 "mLeftAvoidanceArea": 0.1,
-                "mLength": null,
-                "mMaxCurvature": null,
+                "mLength": 2.1025919389595202,
+                "mMaxCurvature": 0.918637766482173,
                 "mObstacleDistance": 0.1,
                 "mObstacleWidth": 0.1,
                 "mPlannerAgain": false,
@@ -45,16 +50,6 @@ export const bezierCurve = (
                 "mSpeed": 0,
                 "mStartPos": startId,
                 "mWidth": 0.3,
-                "m_BezierControl1": {
-                    "x": controlPoint1.x,
-                    "y": controlPoint1.y,
-                    "z": controlPoint1.z
-                },
-                "m_BezierControl2": {
-                    "x": controloint2.x,
-                    "y": controloint2.y,
-                    "z": controloint2.z
-                },
                 "usesensor": {
                     "fall_arrest_system": true,
                     "use_bottom_laser": true,
@@ -63,7 +58,7 @@ export const bezierCurve = (
                 }
             }
         ],
-        "mLength": null,
+        "mLength": 1,
         "mRForbiddenLine": [],
         "mRForbiddenLineID": -1,
         "mRoadID": roadID,

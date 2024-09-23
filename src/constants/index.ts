@@ -5,3 +5,6 @@ export const distToTargrtPoint = .4;
 export const distToCachePoint = .75;
 export const distToGateCachePoint = 1.5;
 export const distToGatePrePoint = 0.2;
+export const firstPointId = 600000;
+export const firstLaneId = 700000;
+export const firstRoadId = 800000;

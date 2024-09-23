@@ -6,7 +6,7 @@ export interface MSceneMap {
 }
 
 export interface MGridMsg {
-    data: string
+    data: number
     header: Header
     info: Info
 }

@@ -54,7 +54,7 @@ export const emptyMooe: MooeDoc = {
     
     mSceneMap: {
         mGridMsg: {
-            data: "",
+            data: 0.04,
             header: {
                 frame_id: "/map",
                 seq: 0,
@@ -82,7 +82,7 @@ export const emptyMooe: MooeDoc = {
                         z: 0
                     }
                 },
-                resolution: 1,
+                resolution: 0.050,
                 width: 8000
             }
         },
@@ -93,13 +93,13 @@ export const emptyMooe: MooeDoc = {
             mMapLandMark: 1000000,
             mMapLaneNum: 100000,
             mMapLength: 100,
-            mMapName: "Test",
+            mMapName: "example",
             mMapOrigin: {
                 x: 0,
                 y: 0,
                 z: 0
             },
-            mMapResolution: 1,
+            mMapResolution: 0.050,
             mMapVerion: "1.0.0",
             mMapWidth: 100
         },

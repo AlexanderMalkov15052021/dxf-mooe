@@ -1,26 +1,28 @@
 import { IDxf } from "dxf-parser";
 
 type DXFDataType = {
+    quadraticSpline: any;
     streamPallets: any;
     gatePallets: any;
     palletLines: any;
     chargeLines: any;
+    cubicSpline: any;
     gateLines: any;
     restLines: any;
     charges: any;
     lines: any;
     rests: any;
     layer: any;
-    spline: any;
 };
 
 export const getDXFData = (dxf: IDxf) => {
 
     return dxf?.entities.reduce<DXFDataType>((accum: any, obj: any) => {
 
-        obj.layer === "ARC" && accum.spline.push(obj);
+        obj.layer === "Quadratic spline roads" && accum.quadraticSpline.push(obj);
+        obj.layer === "Cubic spline roads" && accum.cubicSpline.push(obj);
         obj.layer === "Layer" && (accum.layer = obj);
-        obj.layer === "Rest" && accum.rests.push(obj);
+        obj.layer === "Rest points" && accum.rests.push(obj);
 
         obj.type === "LINE" && accum.lines.push(obj);
 
@@ -28,23 +30,24 @@ export const getDXFData = (dxf: IDxf) => {
         obj.layer === "Charge roads" && accum.chargeLines.push(obj);
         obj.layer === "Rest roads" && accum.restLines.push(obj);
         obj.layer === "Pallet roads" && accum.palletLines.push(obj);
-        obj.layer === "Gtp roads" && accum.gateLines.push(obj);
+        obj.layer === "Flow roads" && accum.gateLines.push(obj);
 
-        obj.text && obj.layer === "Gtp" && obj.text.slice(0, 2) === "GT" && accum.gatePallets.push(obj);
-        obj.text && obj.layer === "Pallet" && obj.text.slice(0, 2) !== "GT" && accum.streamPallets.push(obj);
+        obj.layer === "Flow pallets" && accum.gatePallets.push(obj);
+        obj.layer === "Alley pallets" && accum.streamPallets.push(obj);
 
         return accum;
     }, {
+        quadraticSpline: [],
         streamPallets: [],
         gatePallets: [],
         palletLines: [],
         chargeLines: [],
+        cubicSpline: [],
         gateLines: [],
         restLines: [],
         charges: [],
         lines: [],
         rests: [],
-        spline: [],
         layer: null,
     });
 

@@ -1,4 +1,4 @@
-import { distToGateCachePoint, distToGatePrePoint, distToTargrtPoint, maxDist, scaleCorrection } from "@/constants";
+import { distToGateCachePoint, distToGatePrePoint, distToTargrtPoint, firstPointId, maxDist, scaleCorrection } from "@/constants";
 import { cachePoint } from "@/helpers/elements/cachePoint";
 import { prePoint } from "@/helpers/elements/prePoint";
 import { targetPoint } from "@/helpers/elements/targetPoint";
@@ -6,8 +6,25 @@ import { windingPoint } from "@/helpers/elements/windingPoint";
 import { getAtan2, getDistPointToline } from "@/helpers/math";
 import { MooeDoc } from "@/types";
 
-export const setGatePallets = (mooeDoc: MooeDoc, pallete: any, palletLines: any, linesLength: number, arcsLength: number) => {
-    pallete?.map((obj: any, index: number) => {
+export const setGatePallets = (mooeDoc: MooeDoc, palletes: any, palletLines: any) => {
+
+    const gateCols = palletes?.reduce((acum: any, obj: any) => {
+
+        const textParts = obj.text.split("col");
+
+        const gate = textParts[0];
+        const col = textParts[1].split("row")[0];
+
+        const gateCol = col[0] === "0" ? Number(col[1]) : Number(col);  // 2
+
+        !acum.hasOwnProperty(gate) && (acum = { ...acum, ...{ [gate]: gateCol } });
+        acum[gate] < gateCol && (acum[gate] = gateCol);
+
+        return acum;
+
+    }, {});
+
+    palletes?.map((obj: any) => {
 
         const pointX = obj.position.x * scaleCorrection;
         const pointY = obj.position.y * scaleCorrection;
@@ -40,7 +57,7 @@ export const setGatePallets = (mooeDoc: MooeDoc, pallete: any, palletLines: any,
         );
 
         mooeDoc.mLaneMarks.push(windingPoint(
-            linesLength + index,
+            mooeDoc.mLaneMarks.length + firstPointId,
             pointX,
             pointY,
             angle,
@@ -48,29 +65,36 @@ export const setGatePallets = (mooeDoc: MooeDoc, pallete: any, palletLines: any,
         ));
 
         mooeDoc.mLaneMarks.push(cachePoint(
-            linesLength + index + arcsLength,
+            mooeDoc.mLaneMarks.length + firstPointId,
             pointX + (distToGateCachePoint * Math.cos(angle)),
             pointY + (distToGateCachePoint * Math.sin(angle)),
             angle,
-            `${obj.text.replace(" ", "")}Cache`
+            `${obj.text.replace(" ", "")}识别`
         ));
 
-        if (obj.text.includes("row 1")) {
+        if (obj.text.includes("row09")) {
             mooeDoc.mLaneMarks.push(targetPoint(
-                linesLength * 2 + index + arcsLength,
-                lineData.line.vertices[1].x * scaleCorrection + (distToTargrtPoint * Math.cos(Math.PI * 2 + angle - Math.PI / 2)),
-                lineData.line.vertices[1].y * scaleCorrection + (distToTargrtPoint * Math.sin(Math.PI * 2 + angle - Math.PI / 2)),
-                Math.PI * 2 + angle - Math.PI / 2,
-                `${obj.text.replace(" ", "")}Target2`
+                mooeDoc.mLaneMarks.length + firstPointId,
+                lineData.line.vertices[1].x * scaleCorrection + (distToTargrtPoint * Math.cos(angle - Math.PI / 2)),
+                lineData.line.vertices[1].y * scaleCorrection + (distToTargrtPoint * Math.sin(angle - Math.PI / 2)),
+                angle - Math.PI / 2,
+                `${obj.text.replace(" ", "")}前置点`
             ));
         }
 
-        if (obj.text.includes("col01row 1")) {
+
+        const textParts = obj.text.split("col");
+        const gate = textParts[0];
+        const col = textParts[1].split("row")[0];
+        const gateCol = col[0] === "0" ? Number(col[1]) : Number(col);
+
+
+        if (obj.text.includes("row09") && gateCols[gate] === gateCol) {
             mooeDoc.mLaneMarks.push(prePoint(
-                linesLength * 3 + index + arcsLength,
-                lineData.line.vertices[1].x * scaleCorrection + (distToGatePrePoint * 2 * Math.cos(Math.PI * 2 + angle + Math.PI / 2)),
-                lineData.line.vertices[1].y * scaleCorrection + (distToGatePrePoint * 2 * Math.sin(Math.PI * 2 + angle + Math.PI / 2)),
-                Math.PI * 2 + angle - Math.PI / 2,
+                mooeDoc.mLaneMarks.length + firstPointId,
+                lineData.line.vertices[1].x * scaleCorrection + (distToGatePrePoint * 2 * Math.cos(angle + Math.PI / 2)),
+                lineData.line.vertices[1].y * scaleCorrection + (distToGatePrePoint * 2 * Math.sin(angle + Math.PI / 2)),
+                angle - Math.PI / 2,
                 `${obj.text.split("col")[0]}entrance`
             ));
         }

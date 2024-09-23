@@ -1,12 +1,12 @@
-import { distToCachePoint, distToTargrtPoint, maxDist, scaleCorrection } from "@/constants";
+import { distToCachePoint, distToTargrtPoint, firstPointId, maxDist, scaleCorrection } from "@/constants";
 import { cachePoint } from "@/helpers/elements/cachePoint";
 import { targetPoint } from "@/helpers/elements/targetPoint";
 import { windingPoint } from "@/helpers/elements/windingPoint";
 import { getAtan2, getDistPointToline } from "@/helpers/math";
 import { MooeDoc } from "@/types";
 
-export const setStreamPallets = (mooeDoc: MooeDoc, pallete: any, palletLines: any, linesLength: number, arcsLength: number) => {
-    pallete?.map((obj: any, index: number) => {
+export const setStreamPallets = (mooeDoc: MooeDoc, pallete: any, palletLines: any) => {
+    pallete?.map((obj: any) => {
 
         const pointX = obj.position.x * scaleCorrection;
         const pointY = obj.position.y * scaleCorrection;
@@ -39,7 +39,7 @@ export const setStreamPallets = (mooeDoc: MooeDoc, pallete: any, palletLines: an
         );
 
         mooeDoc.mLaneMarks.push(windingPoint(
-            linesLength + index,
+            mooeDoc.mLaneMarks.length + firstPointId,
             pointX,
             pointY,
             angle,
@@ -47,27 +47,27 @@ export const setStreamPallets = (mooeDoc: MooeDoc, pallete: any, palletLines: an
         ));
 
         mooeDoc.mLaneMarks.push(cachePoint(
-            linesLength + index + arcsLength,
+            mooeDoc.mLaneMarks.length + firstPointId,
             pointX + (distToCachePoint * Math.cos(angle)),
             pointY + (distToCachePoint * Math.sin(angle)),
             angle,
-            `${obj.text.replace(" ", "")}Cache`
+            `${obj.text.replace(" ", "")}识别`
         ));
 
         mooeDoc.mLaneMarks.push(targetPoint(
-            linesLength * 2 + index + arcsLength,
+            mooeDoc.mLaneMarks.length + firstPointId,
             pointX + (distToTargrtPoint * Math.cos(angle)),
             pointY + (distToTargrtPoint * Math.sin(angle)),
             angle,
-            `${obj.text.replace(" ", "")}Target1`
+            `${obj.text.replace(" ", "")}检`
         ));
 
         mooeDoc.mLaneMarks.push(targetPoint(
-            linesLength * 3 + index + arcsLength,
+            mooeDoc.mLaneMarks.length + firstPointId,
             lineData.line.vertices[1].x * scaleCorrection + (distToTargrtPoint * Math.cos(Math.PI * 2 + angle + Math.PI / 2)),
             lineData.line.vertices[1].y * scaleCorrection + (distToTargrtPoint * Math.sin(Math.PI * 2 + angle + Math.PI / 2)),
             Math.PI * 2 + angle + Math.PI / 2,
-            `${obj.text.replace(" ", "")}Target2`
+            `${obj.text.replace(" ", "")}前置点`
         ));
 
     });
