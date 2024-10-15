@@ -49,65 +49,67 @@ const ParametersBlock = observer(() => {
                     <div className={styles["form-item-block"]}>
 
                         <Title className={styles.subTitle} level={5}>{"Угол поворота:"}</Title>
+                        <div className={styles["item-content"]}>
+                            <Form.Item<FieldType>
+                                label={<RotateRightOutlined style={{ fontSize: '32px' }} />}
+                                name="rotAngle"
+                                rules={[{ required: true, message: 'Пожалуйста, введите угол поворота!' }]}
+                                className={styles["input-wrapper"]}
+                            >
+                                <Input type="number" autoComplete="on" />
+                            </Form.Item>
 
-                        <Form.Item<FieldType>
-                            label={<RotateRightOutlined style={{ fontSize: '32px' }} />}
-                            name="rotAngle"
-                            rules={[{ required: true, message: 'Пожалуйста, введите угол поворота!' }]}
-                            className={styles["input-wrapper"]}
-                        >
-                            <Input type="number" autoComplete="on" />
-                        </Form.Item>
-
+                        </div>
                     </div>
 
                 </div>
                 <div className={styles["form-item"]}>
                     <Title className={styles["item-title"]} level={4}>Настройка систем координат</Title>
+                    <div className={styles["item-content"]}>
+                        <div className={styles["form-item-block"]}>
 
-                    <div className={styles["form-item-block"]}>
+                            <Title className={styles.subTitle} level={5}>{"Точка Autocad:"}</Title>
 
-                        <Title className={styles.subTitle} level={5}>{"Точка Autocad:"}</Title>
+                            <Form.Item<FieldType>
+                                label={"x:"}
+                                name="autocadPointX"
+                                rules={[{ required: true, message: 'Пожалуйста, введите угол поворота!' }]}
+                                className={styles["input-wrapper"]}
+                            >
+                                <Input type="number" autoComplete="on" />
+                            </Form.Item>
+                            <Form.Item<FieldType>
+                                label={"y:"}
+                                name="autocadPointY"
+                                rules={[{ required: true, message: 'Пожалуйста, введите угол поворота!' }]}
+                                className={styles["input-wrapper"]}
+                            >
+                                <Input type="number" autoComplete="on" />
+                            </Form.Item>
 
-                        <Form.Item<FieldType>
-                            label={"x:"}
-                            name="autocadPointX"
-                            rules={[{ required: true, message: 'Пожалуйста, введите угол поворота!' }]}
-                            className={styles["input-wrapper"]}
-                        >
-                            <Input type="number" autoComplete="on" />
-                        </Form.Item>
-                        <Form.Item<FieldType>
-                            label={"y:"}
-                            name="autocadPointY"
-                            rules={[{ required: true, message: 'Пожалуйста, введите угол поворота!' }]}
-                            className={styles["input-wrapper"]}
-                        >
-                            <Input type="number" autoComplete="on" />
-                        </Form.Item>
+                        </div>
+                        <div className={styles["form-item-block"]}>
 
-                    </div>
-                    <div className={styles["form-item-block"]}>
+                            <Title className={styles.subTitle} level={5}>{"Точка Mooe:"}</Title>
 
-                        <Title className={styles.subTitle} level={5}>{"Точка Mooe:"}</Title>
+                            <Form.Item<FieldType>
+                                label={"x:"}
+                                name="moeePointX"
+                                rules={[{ required: true, message: 'Пожалуйста, введите угол поворота!' }]}
+                                className={styles["input-wrapper"]}
+                            >
+                                <Input type="number" autoComplete="on" />
+                            </Form.Item>
+                            <Form.Item<FieldType>
+                                label={"y:"}
+                                name="moeePointY"
+                                rules={[{ required: true, message: 'Пожалуйста, введите угол поворота!' }]}
+                                className={styles["input-wrapper"]}
+                            >
+                                <Input type="number" autoComplete="on" />
+                            </Form.Item>
 
-                        <Form.Item<FieldType>
-                            label={"x:"}
-                            name="moeePointX"
-                            rules={[{ required: true, message: 'Пожалуйста, введите угол поворота!' }]}
-                            className={styles["input-wrapper"]}
-                        >
-                            <Input type="number" autoComplete="on" />
-                        </Form.Item>
-                        <Form.Item<FieldType>
-                            label={"y:"}
-                            name="moeePointY"
-                            rules={[{ required: true, message: 'Пожалуйста, введите угол поворота!' }]}
-                            className={styles["input-wrapper"]}
-                        >
-                            <Input type="number" autoComplete="on" />
-                        </Form.Item>
-
+                        </div>
                     </div>
                 </div>
 

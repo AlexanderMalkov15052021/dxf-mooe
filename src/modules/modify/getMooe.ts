@@ -19,10 +19,10 @@ export const getMooe = (dxf: IDxf) => {
     setLines(mooeDoc, DXFData.lines);
     setCubicSpline(mooeDoc, DXFData.cubicSpline);
     setQuadraticSpline(mooeDoc, DXFData.quadraticSpline);
-    setStreamPallets(mooeDoc, DXFData.streamPallets, DXFData.palletLines);
-    setGatePallets(mooeDoc, DXFData.gatePallets, DXFData.gateLines);
-    setRestPoints(mooeDoc, DXFData.rests, DXFData.restLines);
-    setChargePoints(mooeDoc, DXFData.charges, DXFData.chargeLines);
+    setStreamPallets(mooeDoc, DXFData.streamPallets, DXFData.palletLines, DXFData.lines);
+    setGatePallets(mooeDoc, DXFData.gatePallets, DXFData.gateLines, DXFData.lines);
+    setRestPoints(mooeDoc, DXFData.rests, DXFData.restLines, DXFData.lines);
+    setChargePoints(mooeDoc, DXFData.charges, DXFData.chargeLines, DXFData.lines);
 
     setLayerSize(mooeDoc, DXFData.layer);
 

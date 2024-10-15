@@ -5,7 +5,7 @@ import { windingPoint } from "@/helpers/elements/windingPoint";
 import { getAtan2, getDistPointToline } from "@/helpers/math";
 import { MooeDoc } from "@/types";
 
-export const setChargePoints = (mooeDoc: MooeDoc, chargePoints: any, chargeLines: any) => {
+export const setChargePoints = (mooeDoc: MooeDoc, chargePoints: any, chargeLines: any, lines: any) => {
     chargePoints?.map((obj: any) => {
 
         const pointX = obj.position.x * scaleCorrection;
@@ -38,6 +38,33 @@ export const setChargePoints = (mooeDoc: MooeDoc, chargePoints: any, chargeLines
             lineData.line.vertices[1].y
         );
 
+        const targetLineData = lines.reduce((accum: { dist: number, line: any }, line: any) => {
+
+            const dist = getDistPointToline(
+                lineData.line.vertices[1].x * scaleCorrection - (distToTargrtPoint * Math.cos(angle + Math.PI / 2)),
+                lineData.line.vertices[1].y * scaleCorrection - (distToTargrtPoint * Math.sin(angle + Math.PI / 2)),
+                line.vertices[0].x * scaleCorrection,
+                line.vertices[0].y * scaleCorrection,
+                line.vertices[1].x * scaleCorrection,
+                line.vertices[1].y * scaleCorrection
+            );
+
+            if (dist < accum.dist) {
+                accum.dist = dist;
+                accum.line = line;
+            }
+
+            return accum;
+
+        }, { dist: maxDist, line: null });
+
+        const targetAngle = getAtan2(
+            targetLineData.line.vertices[0].x,
+            targetLineData.line.vertices[0].y,
+            targetLineData.line.vertices[1].x,
+            targetLineData.line.vertices[1].y
+        );
+
         mooeDoc.mLaneMarks.push(windingPoint(
             mooeDoc.mLaneMarks.length + firstPointId,
             pointX,
@@ -58,7 +85,7 @@ export const setChargePoints = (mooeDoc: MooeDoc, chargePoints: any, chargeLines
             mooeDoc.mLaneMarks.length + firstPointId,
             lineData.line.vertices[1].x * scaleCorrection - (distToTargrtPoint * Math.cos(angle + Math.PI / 2)),
             lineData.line.vertices[1].y * scaleCorrection - (distToTargrtPoint * Math.sin(angle + Math.PI / 2)),
-            angle - 3 * Math.PI / 2,
+            targetAngle,
             `${obj.text.replace(" ", "")}前置点`
         ));
 

@@ -64,6 +64,10 @@
     background-color: transparent;
 }
 
+.item-content {
+    display: flex;
+}
+
 @media (max-width: 1300px) {
 
     .form-block {
