@@ -1,6 +1,6 @@
 import { ConverterStor } from "@/entities";
 import { observer } from "mobx-react-lite";
-import { AimOutlined, RotateRightOutlined } from "@ant-design/icons";
+import { RotateRightOutlined } from "@ant-design/icons";
 import styles from "./ParametersBlock.module.css";
 import { Button, Form, FormProps, Input } from 'antd/lib';
 import Title from "antd/lib/typography/Title";
@@ -37,7 +37,7 @@ const ParametersBlock = observer(() => {
             name="basic"
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 16 }}
-            initialValues={{ rotAngle: "0", autocadPoint: "0", moeePoint: "0" }}
+            initialValues={{ rotAngle: "0", autocadPointX: "0", moeePointX: "0", autocadPointY: "0", moeePointY: "0" }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             className={styles["form"]}
@@ -70,8 +70,16 @@ const ParametersBlock = observer(() => {
                         <Title level={5}>{"Точка Autocad:"}</Title>
 
                         <Form.Item<FieldType>
-                            label={<AimOutlined style={{ fontSize: '32px' }} />}
-                            name="autocadPoint"
+                            label={"x:"}
+                            name="autocadPointX"
+                            rules={[{ required: true, message: 'Пожалуйста, введите угол поворота!' }]}
+                            className={styles["input-wrapper"]}
+                        >
+                            <Input type="number" autoComplete="on" />
+                        </Form.Item>
+                        <Form.Item<FieldType>
+                            label={"y:"}
+                            name="autocadPointY"
                             rules={[{ required: true, message: 'Пожалуйста, введите угол поворота!' }]}
                             className={styles["input-wrapper"]}
                         >
@@ -84,8 +92,16 @@ const ParametersBlock = observer(() => {
                         <Title level={5}>{"Точка Mooe:"}</Title>
 
                         <Form.Item<FieldType>
-                            label={<AimOutlined style={{ fontSize: '32px' }} />}
-                            name="moeePoint"
+                            label={"x:"}
+                            name="moeePointX"
+                            rules={[{ required: true, message: 'Пожалуйста, введите угол поворота!' }]}
+                            className={styles["input-wrapper"]}
+                        >
+                            <Input type="number" autoComplete="on" />
+                        </Form.Item>
+                        <Form.Item<FieldType>
+                            label={"y:"}
+                            name="moeePointY"
                             rules={[{ required: true, message: 'Пожалуйста, введите угол поворота!' }]}
                             className={styles["input-wrapper"]}
                         >

@@ -16,7 +16,8 @@ class ConverterStor {
 
     setParams = (values: FieldType) => {
 
-        const shift = Number(values.moeePoint) - Number(values.autocadPoint);  // mLaneMarks   mLaneMarkXYZW
+        const shiftX = Number(values.moeePointX) - Number(values.autocadPointX);  // mLaneMarks   mLaneMarkXYZW
+        const shiftY = Number(values.moeePointY) - Number(values.autocadPointY);  // mLaneMarks   mLaneMarkXYZW
 
         this.setMooeDoc({
             ...this.mooeDoc,
@@ -24,8 +25,8 @@ class ConverterStor {
                 ...obj,
                 mLaneMarkXYZW: {
                     ...obj.mLaneMarkXYZW,
-                    x: obj.mLaneMarkXYZW.x + shift,
-                    y: obj.mLaneMarkXYZW.y + shift,
+                    x: obj.mLaneMarkXYZW.x + shiftX,
+                    y: obj.mLaneMarkXYZW.y + shiftY,
                 }
             })),
 
@@ -41,8 +42,8 @@ class ConverterStor {
 
                                 mBezierControl: {
                                     ...obj.mLanes[0]?.mBezierControl,
-                                    x: obj.mLanes[0]?.mBezierControl.x + shift,
-                                    y: obj.mLanes[0]?.mBezierControl.y + shift
+                                    x: obj.mLanes[0]?.mBezierControl.x + shiftX,
+                                    y: obj.mLanes[0]?.mBezierControl.y + shiftY
                                 }
                             }
                         ]
@@ -59,14 +60,14 @@ class ConverterStor {
 
                                 m_BezierControl1: {
                                     ...obj.mLanes[0]?.m_BezierControl1,
-                                    x: obj.mLanes[0]?.m_BezierControl1.x + shift * 50,
-                                    y: obj.mLanes[0]?.m_BezierControl1.y + shift * 50 * -1
+                                    x: obj.mLanes[0]?.m_BezierControl1.x + shiftX * 50,
+                                    y: obj.mLanes[0]?.m_BezierControl1.y + shiftY * 50 * -1
                                 },
 
                                 m_BezierControl2: {
                                     ...obj.mLanes[0]?.m_BezierControl2,
-                                    x: obj.mLanes[0]?.m_BezierControl2.x + shift * 50,
-                                    y: obj.mLanes[0]?.m_BezierControl2.y + shift * 50 * -1
+                                    x: obj.mLanes[0]?.m_BezierControl2.x + shiftX * 50,
+                                    y: obj.mLanes[0]?.m_BezierControl2.y + shiftY * 50 * -1
                                 }
                             }
                         ]

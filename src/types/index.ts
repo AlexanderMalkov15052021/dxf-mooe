@@ -357,6 +357,9 @@ export interface MStartPosition {
 
 export type FieldType = {
     rotAngle: string;
-    autocadPoint: string;
+    autocadPointX: string;
+    autocadPointY: string;
+    moeePointX: string;
+    moeePointY: string;
     moeePoint: string;
 };
