@@ -268,16 +268,6 @@ export type MooeDoc = {
     mapRotateAngle: number;
 };
 
-export type FieldType = {
-    x1: number;
-    y1: number;
-    angle: number;
-    x2: number;
-    y2: number;
-    numRow: number;
-    columnsInterval: number;
-};
-
 export type Coords = {
     x: number; y: number
 };
@@ -364,3 +354,9 @@ export interface MStartPosition {
     y: number
     z: number
 }
+
+export type FieldType = {
+    rotAngle: string;
+    autocadPoint: string;
+    moeePoint: string;
+};

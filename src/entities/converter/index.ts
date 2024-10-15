@@ -1,5 +1,5 @@
 import { emptyMooe } from "@/helpers/emptyMooe/emptyMooe";
-import { MooeDoc } from "@/types";
+import { FieldType, MooeDoc } from "@/types";
 import { makeAutoObservable } from "mobx";
 
 class ConverterStor {
@@ -14,6 +14,73 @@ class ConverterStor {
         makeAutoObservable(this);
     }
 
+    setParams = (values: FieldType) => {
+
+        const shift = Number(values.moeePoint) - Number(values.autocadPoint);  // mLaneMarks   mLaneMarkXYZW
+
+        this.setMooeDoc({
+            ...this.mooeDoc,
+            mLaneMarks: this.mooeDoc.mLaneMarks.map(obj => ({
+                ...obj,
+                mLaneMarkXYZW: {
+                    ...obj.mLaneMarkXYZW,
+                    x: obj.mLaneMarkXYZW.x + shift,
+                    y: obj.mLaneMarkXYZW.y + shift,
+                }
+            })),
+
+            mRoads: this.mooeDoc.mRoads.map((obj: any) => {
+
+                if (obj.mLanes[0].hasOwnProperty('mBezierControl')) {
+                    return {
+                        ...obj,
+
+                        mLanes: [
+                            {
+                                ...obj.mLanes[0],
+
+                                mBezierControl: {
+                                    ...obj.mLanes[0]?.mBezierControl,
+                                    x: obj.mLanes[0]?.mBezierControl.x + shift,
+                                    y: obj.mLanes[0]?.mBezierControl.y + shift
+                                }
+                            }
+                        ]
+                    }
+                }
+
+                if (obj.mLanes[0].hasOwnProperty('m_BezierControl1')) {
+                    return {
+                        ...obj,
+
+                        mLanes: [
+                            {
+                                ...obj.mLanes[0],
+
+                                m_BezierControl1: {
+                                    ...obj.mLanes[0]?.m_BezierControl1,
+                                    x: obj.mLanes[0]?.m_BezierControl1.x + shift * 50,
+                                    y: obj.mLanes[0]?.m_BezierControl1.y + shift * 50 * -1
+                                },
+
+                                m_BezierControl2: {
+                                    ...obj.mLanes[0]?.m_BezierControl2,
+                                    x: obj.mLanes[0]?.m_BezierControl2.x + shift * 50,
+                                    y: obj.mLanes[0]?.m_BezierControl2.y + shift * 50 * -1
+                                }
+                            }
+                        ]
+                    }
+                }
+
+                return { ...obj }
+
+            }),
+
+            mapRotateAngle: Number(values.rotAngle),
+
+        });
+    }
 
     setLoadingTime = (val: number[]) => this.loadingTime = val;
     setIsMessageShow = (val: boolean) => this.isMessageShow = val;
