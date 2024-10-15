@@ -83,8 +83,8 @@ export const setRestPoints = (mooeDoc: MooeDoc, rests: any, restLines: any, line
 
         mooeDoc.mLaneMarks.push(targetPoint(
             mooeDoc.mLaneMarks.length + firstPointId,
-            lineData.line.vertices[1].x * scaleCorrection - (distToTargrtPoint * Math.cos(angle + Math.PI / 2)),
-            lineData.line.vertices[1].y * scaleCorrection - (distToTargrtPoint * Math.sin(angle + Math.PI / 2)),
+            lineData.line.vertices[1].x * scaleCorrection - (distToTargrtPoint * Math.cos(targetAngle)),
+            lineData.line.vertices[1].y * scaleCorrection - (distToTargrtPoint * Math.sin(targetAngle)),
             targetAngle,
             `${obj.text.replace(" ", "")}前置点`
         ));
