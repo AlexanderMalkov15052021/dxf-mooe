@@ -77,7 +77,7 @@ export const setGatePallets = (mooeDoc: MooeDoc, palletes: any, palletLines: any
                 mooeDoc.mLaneMarks.length + firstPointId,
                 lineData.line.vertices[1].x * scaleCorrection + (distToTargrtPoint * Math.cos(angle - Math.PI / 2)),
                 lineData.line.vertices[1].y * scaleCorrection + (distToTargrtPoint * Math.sin(angle - Math.PI / 2)),
-                angle - Math.PI / 2,
+                angle - 3 * Math.PI / 2,
                 `${obj.text.replace(" ", "")}前置点`
             ));
         }

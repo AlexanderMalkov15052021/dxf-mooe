@@ -66,7 +66,7 @@ export const setStreamPallets = (mooeDoc: MooeDoc, pallete: any, palletLines: an
             mooeDoc.mLaneMarks.length + firstPointId,
             lineData.line.vertices[1].x * scaleCorrection + (distToTargrtPoint * Math.cos(Math.PI * 2 + angle + Math.PI / 2)),
             lineData.line.vertices[1].y * scaleCorrection + (distToTargrtPoint * Math.sin(Math.PI * 2 + angle + Math.PI / 2)),
-            Math.PI * 2 + angle + Math.PI / 2,
+            angle + 3 * Math.PI / 2,
             `${obj.text.replace(" ", "")}前置点`
         ));
 
