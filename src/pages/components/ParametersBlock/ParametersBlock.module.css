@@ -50,11 +50,17 @@
 }
 
 .item-title {
-    margin-top: 5px;
+    margin-top: 0;
     margin-bottom: 0;
 }
 
-.input-wrapper input, .input-wrapper input:focus, .input-wrapper input:hover {
+.subTitle {
+    margin-top: 5px;
+}
+
+.input-wrapper input,
+.input-wrapper input:focus,
+.input-wrapper input:hover {
     background-color: transparent;
 }
 

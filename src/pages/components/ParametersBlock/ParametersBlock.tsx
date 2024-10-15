@@ -48,7 +48,7 @@ const ParametersBlock = observer(() => {
                     <Title className={styles["item-title"]} level={4}>Дополнительные данные</Title>
                     <div className={styles["form-item-block"]}>
 
-                        <Title level={5}>{"Угол поворота:"}</Title>
+                        <Title className={styles.subTitle} level={5}>{"Угол поворота:"}</Title>
 
                         <Form.Item<FieldType>
                             label={<RotateRightOutlined style={{ fontSize: '32px' }} />}
@@ -67,7 +67,7 @@ const ParametersBlock = observer(() => {
 
                     <div className={styles["form-item-block"]}>
 
-                        <Title level={5}>{"Точка Autocad:"}</Title>
+                        <Title className={styles.subTitle} level={5}>{"Точка Autocad:"}</Title>
 
                         <Form.Item<FieldType>
                             label={"x:"}
@@ -89,7 +89,7 @@ const ParametersBlock = observer(() => {
                     </div>
                     <div className={styles["form-item-block"]}>
 
-                        <Title level={5}>{"Точка Mooe:"}</Title>
+                        <Title className={styles.subTitle} level={5}>{"Точка Mooe:"}</Title>
 
                         <Form.Item<FieldType>
                             label={"x:"}
