@@ -1,6 +1,7 @@
-import { distToGateCachePoint, distToGatePrePoint, distToTargrtPoint, firstPointId, maxDist, scaleCorrection } from "@/constants";
+import { distToGateCachePoint, distToTargrtPoint, firstPointId, maxDist, scaleCorrection } from "@/constants";
+// import { distToGateCachePoint, distToGatePrePoint, distToTargrtPoint, firstPointId, maxDist, scaleCorrection } from "@/constants";
 import { cachePoint } from "@/helpers/elements/cachePoint";
-import { prePoint } from "@/helpers/elements/prePoint";
+// import { prePoint } from "@/helpers/elements/prePoint";
 import { targetPoint } from "@/helpers/elements/targetPoint";
 import { windingPoint } from "@/helpers/elements/windingPoint";
 import { getAtan2, getDistPointToline } from "@/helpers/math";
@@ -8,21 +9,21 @@ import { MooeDoc } from "@/types";
 
 export const setGatePallets = (mooeDoc: MooeDoc, palletes: any, palletLines: any, lines: any) => {
 
-    const gateCols = palletes?.reduce((acum: any, obj: any) => {
+    // const gateCols = palletes?.reduce((acum: any, obj: any) => {
 
-        const textParts = obj.text.split("col");
+    //     const textParts = obj.text.split("col");
 
-        const gate = textParts[0];
-        const col = textParts[1].split("row")[0];
+    //     const gate = textParts[0];
+    //     const col = textParts[1].split("row")[0];
 
-        const gateCol = col[0] === "0" ? Number(col[1]) : Number(col);  // 2
+    //     const gateCol = col[0] === "0" ? Number(col[1]) : Number(col);  // 2
 
-        !acum.hasOwnProperty(gate) && (acum = { ...acum, ...{ [gate]: gateCol } });
-        acum[gate] < gateCol && (acum[gate] = gateCol);
+    //     !acum.hasOwnProperty(gate) && (acum = { ...acum, ...{ [gate]: gateCol } });
+    //     acum[gate] < gateCol && (acum[gate] = gateCol);
 
-        return acum;
+    //     return acum;
 
-    }, {});
+    // }, {});
 
     palletes?.map((obj: any) => {
 
@@ -110,21 +111,21 @@ export const setGatePallets = (mooeDoc: MooeDoc, palletes: any, palletLines: any
         }
 
 
-        const textParts = obj.text.split("col");
-        const gate = textParts[0];
-        const col = textParts[1].split("row")[0];
-        const gateCol = col[0] === "0" ? Number(col[1]) : Number(col);
+        // const textParts = obj.text.split("col");
+        // const gate = textParts[0];
+        // const col = textParts[1].split("row")[0];
+        // const gateCol = col[0] === "0" ? Number(col[1]) : Number(col);
 
 
-        if (obj.text.includes("row09") && gateCols[gate] === gateCol) {
-            mooeDoc.mLaneMarks.push(prePoint(
-                mooeDoc.mLaneMarks.length + firstPointId,
-                lineData.line.vertices[1].x * scaleCorrection + (distToGatePrePoint * 2 * Math.cos(angle + Math.PI / 2)),
-                lineData.line.vertices[1].y * scaleCorrection + (distToGatePrePoint * 2 * Math.sin(angle + Math.PI / 2)),
-                angle - Math.PI / 2,
-                `${obj.text.split("col")[0]}entrance`
-            ));
-        }
+        // if (obj.text.includes("row09") && gateCols[gate] === gateCol) {
+        //     mooeDoc.mLaneMarks.push(prePoint(
+        //         mooeDoc.mLaneMarks.length + firstPointId,
+        //         lineData.line.vertices[1].x * scaleCorrection + (distToGatePrePoint * 2 * Math.cos(angle + Math.PI / 2)),
+        //         lineData.line.vertices[1].y * scaleCorrection + (distToGatePrePoint * 2 * Math.sin(angle + Math.PI / 2)),
+        //         angle - Math.PI / 2,
+        //         `${obj.text.split("col")[0]}entrance`
+        //     ));
+        // }
 
     });
 

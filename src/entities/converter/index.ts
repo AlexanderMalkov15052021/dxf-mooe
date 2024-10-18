@@ -10,14 +10,31 @@ class ConverterStor {
     href: string = "";
     mooeDoc: MooeDoc = emptyMooe;
 
+    inaccuracy: string = "0.001";
+    permission: string = "0.1";
+
+    diapasonPoints: { x: number, y: number }[] = [];
+
     constructor() {
         makeAutoObservable(this);
     }
 
+    setDiapasonPoints = (points: { x: number, y: number }[]) => {
+        this.diapasonPoints = points;
+    }
+
+    setInaccuracy = (val: string) => {
+        this.inaccuracy = val;
+    }
+
+    setPermission = (val: string) => {
+        this.permission = val;
+    }
+
     setParams = (values: FieldType) => {
 
-        const shiftX = Number(values.moeePointX) - Number(values.autocadPointX);  // mLaneMarks   mLaneMarkXYZW
-        const shiftY = Number(values.moeePointY) - Number(values.autocadPointY);  // mLaneMarks   mLaneMarkXYZW
+        const shiftX = Number(values.moeePointX) - Number(values.autocadPointX);
+        const shiftY = Number(values.moeePointY) - Number(values.autocadPointY);
 
         this.setMooeDoc({
             ...this.mooeDoc,

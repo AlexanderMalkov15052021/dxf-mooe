@@ -362,4 +362,6 @@ export type FieldType = {
     moeePointX: string;
     moeePointY: string;
     moeePoint: string;
+    inaccuracy: string;
+    permission: string;
 };

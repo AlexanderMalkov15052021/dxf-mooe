@@ -1,4 +1,3 @@
-import { ConverterStor } from "@/entities";
 import { IDxf } from "dxf-parser";
 import { setLines } from "../insert/setLines";
 import { setQuadraticSpline } from "../insert/setQuadraticSpline"
@@ -9,16 +8,17 @@ import { setRestPoints } from "../insert/setRestPoints";
 import { setChargePoints } from "../insert/setChargePoints";
 import { getDXFData } from "../extract/getDXFData";
 import { setCubicSpline } from "../insert/setCubicSpline";
+import { MooeDoc } from "@/types";
 
-export const getMooe = (dxf: IDxf) => {
+export const getMooe = (dxf: IDxf, mooeDoc: MooeDoc, permission: string) => {
 
-    const { store: { mooeDoc } } = ConverterStor;
+    const numInc = Number(permission);
 
     const DXFData = getDXFData(dxf);
 
-    setLines(mooeDoc, DXFData.lines);
-    setCubicSpline(mooeDoc, DXFData.cubicSpline);
-    setQuadraticSpline(mooeDoc, DXFData.quadraticSpline);
+    setLines(mooeDoc, DXFData.lines, numInc);
+    setCubicSpline(mooeDoc, DXFData.cubicSpline, numInc);
+    setQuadraticSpline(mooeDoc, DXFData.quadraticSpline, numInc);
     setStreamPallets(mooeDoc, DXFData.streamPallets, DXFData.palletLines, DXFData.lines);
     setGatePallets(mooeDoc, DXFData.gatePallets, DXFData.gateLines, DXFData.lines);
     setRestPoints(mooeDoc, DXFData.rests, DXFData.restLines, DXFData.lines);

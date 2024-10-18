@@ -1,23 +1,23 @@
-import { inaccuracy, scaleCorrection, firstPointId, firstLaneId, firstRoadId } from "@/constants";
+import { scaleCorrection, firstPointId, firstLaneId, firstRoadId } from "@/constants";
 import { road } from "@/helpers/elements/road";
 import { roadPoint } from "@/helpers/elements/roadPoint";
 import { isNearestPoints } from "@/helpers/math";
 import { MooeDoc } from "@/types";
 
-export const setLines = (mooeDoc: MooeDoc, lines: any) => {
+export const setLines = (mooeDoc: MooeDoc, lines: any, permission: number) => {
 
     lines?.map((obj: any) => {
-        const pointX1 = obj.vertices[0].x * scaleCorrection
-        const pointY1 = obj.vertices[0].y * scaleCorrection
+        const pointX1 = obj.vertices[0].x * scaleCorrection;
+        const pointY1 = obj.vertices[0].y * scaleCorrection;
 
-        const pointX2 = obj.vertices[1].x * scaleCorrection
-        const pointY2 = obj.vertices[1].y * scaleCorrection
+        const pointX2 = obj.vertices[1].x * scaleCorrection;
+        const pointY2 = obj.vertices[1].y * scaleCorrection;
 
         const obj1 = mooeDoc.mLaneMarks.find(
-            (obj: any) => isNearestPoints(obj.mLaneMarkXYZW.x, obj.mLaneMarkXYZW.y, pointX1, pointY1, inaccuracy)
+            (obj: any) => isNearestPoints(obj.mLaneMarkXYZW.x, obj.mLaneMarkXYZW.y, pointX1, pointY1, permission)
         );
         const obj2 = mooeDoc.mLaneMarks.find(
-            (obj: any) => isNearestPoints(obj.mLaneMarkXYZW.x, obj.mLaneMarkXYZW.y, pointX2, pointY2, inaccuracy)
+            (obj: any) => isNearestPoints(obj.mLaneMarkXYZW.x, obj.mLaneMarkXYZW.y, pointX2, pointY2, permission)
         );
 
         const obj1Id = !obj1

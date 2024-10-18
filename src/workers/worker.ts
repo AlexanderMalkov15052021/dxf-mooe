@@ -8,11 +8,11 @@ const sendDXF = (evt: any) => {
 
     const parser = new DxfParser();
 
-    const dxf = parser.parse(evt.data.result);
+    const dxf = parser.parse(evt.data.dxfStr);
 
     console.log("dxf: ", dxf);
 
-    const doc = dxf ? getMooe(dxf) : emptyMooe;
+    const doc = dxf ? getMooe(dxf, evt.data.mooeDoc, evt.data.permission) : emptyMooe;
 
     ctx.postMessage({ doc: JSON.parse(JSON.stringify(doc)) });
 }

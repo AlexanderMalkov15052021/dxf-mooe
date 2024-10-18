@@ -7,7 +7,7 @@ import UploadForm from "./components/UploadForm/UploadForm";
 import TypeErrorMessage from "./components/TypeErrorMessage/TypeErrorMessage";
 import LoadingBlock from "./components/LoadingBlock/LoadingBlock";
 import DownloadBtn from "./components/DownloadBtn/DownloadBtn";
-import ParametersBlock from "./components/ParametersBlock/ParametersBlock";
+import MapSettings from "./components/MapSettings/MapSettings";
 
 export default function Home() {
 
@@ -29,7 +29,7 @@ export default function Home() {
 
           <UploadForm />
 
-          <ParametersBlock />
+          <MapSettings />
 
           <TypeErrorMessage />
 

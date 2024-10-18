@@ -1,10 +1,10 @@
-import { firstLaneId, firstPointId, firstRoadId, inaccuracy, scaleCorrection } from "@/constants";
+import { firstLaneId, firstPointId, firstRoadId, scaleCorrection } from "@/constants";
 import { quadraticSpline } from "@/helpers/elements/quadraticSpline";
 import { roadPoint } from "@/helpers/elements/roadPoint";
 import { isNearestPoints } from "@/helpers/math";
 import { MooeDoc } from "@/types";
 
-export const setQuadraticSpline = (mooeDoc: MooeDoc, spline: any) => {
+export const setQuadraticSpline = (mooeDoc: MooeDoc, spline: any, permission: number) => {
     spline?.map((obj: any) => {
 
         const obj1 = mooeDoc.mLaneMarks.find(
@@ -13,7 +13,7 @@ export const setQuadraticSpline = (mooeDoc: MooeDoc, spline: any) => {
                 obj.controlPoints[0].y * scaleCorrection,
                 point.mLaneMarkXYZW.x,
                 point.mLaneMarkXYZW.y,
-                inaccuracy
+                permission
             )
         );
 
@@ -30,7 +30,7 @@ export const setQuadraticSpline = (mooeDoc: MooeDoc, spline: any) => {
                 obj.controlPoints[2].y * scaleCorrection,
                 point.mLaneMarkXYZW.x,
                 point.mLaneMarkXYZW.y,
-                inaccuracy
+                permission
             )
         );
 

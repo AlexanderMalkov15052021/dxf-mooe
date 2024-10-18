@@ -11,7 +11,10 @@ import Worker from "worker-loader!@/workers/worker.ts";
 const UploadForm = observer(() => {
 
     const {
-        store: { isLoading, refFileName, setIsMessageShow, setIsLoading, setLoadingTime, setRefFileName, setMooeDoc },
+        store: {
+            mooeDoc, permission, isLoading, refFileName,
+            setIsMessageShow, setIsLoading, setLoadingTime, setRefFileName, setMooeDoc
+        },
     } = ConverterStor;
 
     const refTime = useRef([0, 0]);
@@ -60,7 +63,11 @@ const UploadForm = observer(() => {
 
                     const worker = new Worker();
 
-                    worker.postMessage({ result: JSON.parse(JSON.stringify(fileStr)) });
+                    worker.postMessage({
+                        dxfStr: JSON.parse(JSON.stringify(fileStr)),
+                        mooeDoc: JSON.parse(JSON.stringify(mooeDoc)),
+                        permission: JSON.parse(JSON.stringify(permission))
+                    });
 
                     worker.onmessage = evt => {
 
@@ -86,7 +93,7 @@ const UploadForm = observer(() => {
 
                     console.log("dxf: ", dxf);
 
-                    const doc = dxf ? getMooe(dxf) : emptyMooe;
+                    const doc = dxf ? getMooe(dxf, mooeDoc, permission) : emptyMooe;
 
                     setMooeDoc(doc);
 
