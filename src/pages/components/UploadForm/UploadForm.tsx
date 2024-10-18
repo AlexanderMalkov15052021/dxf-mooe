@@ -7,13 +7,15 @@ import { emptyMooe } from "@/helpers/emptyMooe/emptyMooe";
 import { getMooe } from "@/modules/modify/getMooe";
 
 import Worker from "worker-loader!@/workers/worker.ts";
+import { Modal } from "antd/lib";
 
 const UploadForm = observer(() => {
 
     const {
         store: {
-            mooeDoc, permission, isLoading, refFileName,
-            setIsMessageShow, setIsLoading, setLoadingTime, setRefFileName, setMooeDoc
+            mooeDoc, permission, isLoading, refFileName, inaccuracy, isFarPointsModalOpen, diapasonPoints,
+            setIsMessageShow, setIsLoading, setLoadingTime, setRefFileName, setMooeDoc, setDiapasonPoints,
+            setOpenFarPointsModal
         },
     } = ConverterStor;
 
@@ -66,12 +68,19 @@ const UploadForm = observer(() => {
                     worker.postMessage({
                         dxfStr: JSON.parse(JSON.stringify(fileStr)),
                         mooeDoc: JSON.parse(JSON.stringify(mooeDoc)),
-                        permission: JSON.parse(JSON.stringify(permission))
+                        permission: JSON.parse(JSON.stringify(permission)),
+                        inaccuracy: JSON.parse(JSON.stringify(inaccuracy))
                     });
 
                     worker.onmessage = evt => {
 
-                        setMooeDoc(JSON.parse(JSON.stringify(evt.data.doc)));
+                        const data = JSON.parse(JSON.stringify(evt.data));
+
+                        data.diapasonPoints.length && setOpenFarPointsModal(true);
+
+                        setMooeDoc(data.mooeDoc);
+
+                        setDiapasonPoints(data.diapasonPoints);
 
                         setIsLoading(false);
 
@@ -93,9 +102,13 @@ const UploadForm = observer(() => {
 
                     console.log("dxf: ", dxf);
 
-                    const doc = dxf ? getMooe(dxf, mooeDoc, permission) : emptyMooe;
+                    const data = dxf ? getMooe(dxf, mooeDoc, permission, inaccuracy) : { mooeDoc: emptyMooe, diapasonPoints: [] };
 
-                    setMooeDoc(doc);
+                    data.diapasonPoints.length && setOpenFarPointsModal(true);
+
+                    setDiapasonPoints(data.diapasonPoints);
+
+                    setMooeDoc(data.mooeDoc);
 
                     setIsLoading(false);
 
@@ -126,6 +139,13 @@ const UploadForm = observer(() => {
         refTime.current[1] = 0
     }
 
+    const handleOk = () => {
+        setOpenFarPointsModal(false);
+    }
+
+    const handleCancel = () => {
+        setOpenFarPointsModal(false);
+    }
 
     return <>
         <form onClick={isLoading ? evt => evt.preventDefault() : restFiles}>
@@ -134,6 +154,14 @@ const UploadForm = observer(() => {
             </label>
             <input id="file-upload" type="file" onChange={isLoading ? evt => evt.preventDefault() : readFile} />
         </form>
+        <Modal title="Координаты точек с погрешностью" open={isFarPointsModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            {diapasonPoints.map((poin, index: number) =>
+                <div key={index}>
+                    <span>x: </span><span>{poin.x}</span>
+                    <span>y: </span><span>{poin.y}</span>
+                </div>
+            )}
+        </Modal>
     </>
 });
 

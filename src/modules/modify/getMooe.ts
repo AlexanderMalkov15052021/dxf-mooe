@@ -1,6 +1,6 @@
 import { IDxf } from "dxf-parser";
 import { setLines } from "../insert/setLines";
-import { setQuadraticSpline } from "../insert/setQuadraticSpline"
+import { setQuadraticSpline } from "../insert/setQuadraticSpline";
 import { setStreamPallets } from "../insert/setStreamPallets";
 import { setGatePallets } from "../insert/setGatePallets";
 import { setLayerSize } from "../insert/setLayerSize";
@@ -10,15 +10,16 @@ import { getDXFData } from "../extract/getDXFData";
 import { setCubicSpline } from "../insert/setCubicSpline";
 import { MooeDoc } from "@/types";
 
-export const getMooe = (dxf: IDxf, mooeDoc: MooeDoc, permission: string) => {
+export const getMooe = (dxf: IDxf, mooeDoc: MooeDoc, permission: string, inaccuracy: string) => {
 
-    const numInc = Number(permission);
+    const numPerm = Number(permission);
+    const numInc = Number(inaccuracy);
 
     const DXFData = getDXFData(dxf);
 
-    setLines(mooeDoc, DXFData.lines, numInc);
-    setCubicSpline(mooeDoc, DXFData.cubicSpline, numInc);
-    setQuadraticSpline(mooeDoc, DXFData.quadraticSpline, numInc);
+    const linePointsDiapason = setLines(mooeDoc, DXFData.lines, numPerm, numInc);
+    setCubicSpline(mooeDoc, DXFData.cubicSpline, numPerm);
+    setQuadraticSpline(mooeDoc, DXFData.quadraticSpline, numPerm);
     setStreamPallets(mooeDoc, DXFData.streamPallets, DXFData.palletLines, DXFData.lines);
     setGatePallets(mooeDoc, DXFData.gatePallets, DXFData.gateLines, DXFData.lines);
     setRestPoints(mooeDoc, DXFData.rests, DXFData.restLines, DXFData.lines);
@@ -26,6 +27,6 @@ export const getMooe = (dxf: IDxf, mooeDoc: MooeDoc, permission: string) => {
 
     setLayerSize(mooeDoc, DXFData.layer);
 
-    return mooeDoc;
+    return { mooeDoc, diapasonPoints: [...linePointsDiapason] };
 
 }

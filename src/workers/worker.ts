@@ -12,9 +12,14 @@ const sendDXF = (evt: any) => {
 
     console.log("dxf: ", dxf);
 
-    const doc = dxf ? getMooe(dxf, evt.data.mooeDoc, evt.data.permission) : emptyMooe;
+    const data = dxf
+        ? getMooe(dxf, evt.data.mooeDoc, evt.data.permission, evt.data.inaccuracy)
+        : { mooeDoc: emptyMooe, diapasonPoints: [] };
 
-    ctx.postMessage({ doc: JSON.parse(JSON.stringify(doc)) });
+    ctx.postMessage({
+        mooeDoc: JSON.parse(JSON.stringify(data.mooeDoc)),
+        diapasonPoints: JSON.parse(JSON.stringify(data.diapasonPoints))
+    });
 }
 
 ctx.addEventListener("message", sendDXF);

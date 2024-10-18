@@ -11,12 +11,18 @@ class ConverterStor {
     mooeDoc: MooeDoc = emptyMooe;
 
     inaccuracy: string = "0.001";
-    permission: string = "0.1";
+    permission: string = "0.001";
 
     diapasonPoints: { x: number, y: number }[] = [];
 
+    isFarPointsModalOpen: boolean = false;
+
     constructor() {
         makeAutoObservable(this);
+    }
+
+    setOpenFarPointsModal = (val: boolean) => {
+        this.isFarPointsModalOpen = val;
     }
 
     setDiapasonPoints = (points: { x: number, y: number }[]) => {
