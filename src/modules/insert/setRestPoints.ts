@@ -41,8 +41,8 @@ export const setRestPoints = (mooeDoc: MooeDoc, rests: any, restLines: any, line
         const targetLineData = lines.reduce((accum: { dist: number, line: any }, line: any) => {
 
             const dist = getDistPointToline(
-                lineData.line.vertices[1].x * scaleCorrection - (distToTargrtPoint * Math.cos(angle + Math.PI / 2)),
-                lineData.line.vertices[1].y * scaleCorrection - (distToTargrtPoint * Math.sin(angle + Math.PI / 2)),
+                lineData.line.vertices[1].x * scaleCorrection - ((distToTargrtPoint / 2) * Math.cos(angle + Math.PI / 2)),
+                lineData.line.vertices[1].y * scaleCorrection - ((distToTargrtPoint / 2) * Math.sin(angle + Math.PI / 2)),
                 line.vertices[0].x * scaleCorrection,
                 line.vertices[0].y * scaleCorrection,
                 line.vertices[1].x * scaleCorrection,
@@ -83,8 +83,8 @@ export const setRestPoints = (mooeDoc: MooeDoc, rests: any, restLines: any, line
 
         mooeDoc.mLaneMarks.push(targetPoint(
             mooeDoc.mLaneMarks.length + firstPointId,
-            lineData.line.vertices[1].x * scaleCorrection - (distToTargrtPoint * Math.cos(targetAngle)),
-            lineData.line.vertices[1].y * scaleCorrection - (distToTargrtPoint * Math.sin(targetAngle)),
+            lineData.line.vertices[1].x * scaleCorrection + (distToTargrtPoint * Math.cos(targetAngle)),
+            lineData.line.vertices[1].y * scaleCorrection + (distToTargrtPoint * Math.sin(targetAngle)),
             targetAngle,
             `${obj.text.replace(" ", "")}前置点`
         ));

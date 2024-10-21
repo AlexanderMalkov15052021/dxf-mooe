@@ -41,8 +41,8 @@ export const setStreamPallets = (mooeDoc: MooeDoc, pallete: any, palletLines: an
         const targetLineData = lines.reduce((accum: { dist: number, line: any }, line: any) => {
 
             const dist = getDistPointToline(
-                lineData.line.vertices[1].x * scaleCorrection - (distToTargrtPoint * Math.cos(angle + Math.PI / 2)),
-                lineData.line.vertices[1].y * scaleCorrection - (distToTargrtPoint * Math.sin(angle + Math.PI / 2)),
+                lineData.line.vertices[1].x * scaleCorrection - ((distToTargrtPoint / 2) * Math.cos(angle + Math.PI / 2)),
+                lineData.line.vertices[1].y * scaleCorrection - ((distToTargrtPoint / 2) * Math.sin(angle + Math.PI / 2)),
                 line.vertices[0].x * scaleCorrection,
                 line.vertices[0].y * scaleCorrection,
                 line.vertices[1].x * scaleCorrection,

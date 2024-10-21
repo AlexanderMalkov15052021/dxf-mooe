@@ -9,7 +9,7 @@ import { FormEvent } from "react";
 
 const MapSettings = observer(() => {
     const {
-        store: { mooeDoc, inaccuracy, permission, setInaccuracy, setParams, setPermission },
+        store: { mooeDoc, dxfStr, inaccuracy, permission, setInaccuracy, setParams, setPermission },
     } = ConverterStor;
 
     const [form] = Form.useForm();
@@ -182,7 +182,7 @@ const MapSettings = observer(() => {
 
 
             <Form.Item wrapperCol={{ offset: 8, span: 16 }} className={styles["submit-btn"]}>
-                <Button disabled={!mooeDoc ? true : false} type="primary" htmlType="submit">
+                <Button disabled={!mooeDoc || !dxfStr ? true : false} type="primary" htmlType="submit">
                     Применить
                 </Button>
             </Form.Item>

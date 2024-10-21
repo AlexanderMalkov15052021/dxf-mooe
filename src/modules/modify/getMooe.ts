@@ -18,8 +18,8 @@ export const getMooe = (dxf: IDxf, mooeDoc: MooeDoc, permission: string, inaccur
     const DXFData = getDXFData(dxf);
 
     const linePointsDiapason = setLines(mooeDoc, DXFData.lines, numPerm, numInc);
-    setCubicSpline(mooeDoc, DXFData.cubicSpline, numPerm);
-    setQuadraticSpline(mooeDoc, DXFData.quadraticSpline, numPerm);
+    const cubicSplinePointsDiapason = setCubicSpline(mooeDoc, DXFData.cubicSpline, numPerm, numInc);
+    const quadraticSplinePointsDiapason = setQuadraticSpline(mooeDoc, DXFData.quadraticSpline, numPerm, numInc);
     setStreamPallets(mooeDoc, DXFData.streamPallets, DXFData.palletLines, DXFData.lines);
     setGatePallets(mooeDoc, DXFData.gatePallets, DXFData.gateLines, DXFData.lines);
     setRestPoints(mooeDoc, DXFData.rests, DXFData.restLines, DXFData.lines);
@@ -27,6 +27,6 @@ export const getMooe = (dxf: IDxf, mooeDoc: MooeDoc, permission: string, inaccur
 
     setLayerSize(mooeDoc, DXFData.layer);
 
-    return { mooeDoc, diapasonPoints: [...linePointsDiapason] };
+    return { mooeDoc, diapasonPoints: [...linePointsDiapason, ...cubicSplinePointsDiapason, ...quadraticSplinePointsDiapason] };
 
 }

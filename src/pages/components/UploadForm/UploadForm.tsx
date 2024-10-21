@@ -1,25 +1,20 @@
 import { ConverterStor } from "@/entities";
 import { observer } from "mobx-react-lite";
-import { ChangeEvent, FormEvent, useRef } from "react";
+import { ChangeEvent, FormEvent } from "react";
 
-import DxfParser from 'dxf-parser';
 import { emptyMooe } from "@/helpers/emptyMooe/emptyMooe";
-import { getMooe } from "@/modules/modify/getMooe";
 
-import Worker from "worker-loader!@/workers/worker.ts";
 import { Modal } from "antd/lib";
 
 const UploadForm = observer(() => {
 
     const {
         store: {
-            mooeDoc, permission, isLoading, refFileName, inaccuracy, isFarPointsModalOpen, diapasonPoints,
-            setIsMessageShow, setIsLoading, setLoadingTime, setRefFileName, setMooeDoc, setDiapasonPoints,
-            setOpenFarPointsModal
+            isLoading, refFileName, isFarPointsModalOpen, diapasonPoints,
+            setIsMessageShow, setIsLoading, setLoadingTime, setRefFileName, setMooeDoc,
+            setOpenFarPointsModal, setDXFStr, setRefTime
         },
     } = ConverterStor;
-
-    const refTime = useRef([0, 0]);
 
     const readFile = (evt: ChangeEvent<HTMLInputElement>) => {
 
@@ -40,86 +35,7 @@ const UploadForm = observer(() => {
 
         reader.onload = async () => {
 
-            const interval = setInterval(() => {
-
-                if (refTime.current[1] === 59) {
-                    setLoadingTime([refTime.current[0] + 1, 0]);
-                    refTime.current[0] += 1;
-                    refTime.current[1] = 0;
-                }
-                else {
-                    setLoadingTime([refTime.current[0], refTime.current[1] + 1]);
-                    refTime.current[1] += 1;
-                }
-
-            }, 1000);
-
-
-            const fileStr = reader.result as string;
-
-            try {
-
-                if (globalThis.window && globalThis.Worker) {
-
-                    console.time("Converting files");
-
-                    const worker = new Worker();
-
-                    worker.postMessage({
-                        dxfStr: JSON.parse(JSON.stringify(fileStr)),
-                        mooeDoc: JSON.parse(JSON.stringify(mooeDoc)),
-                        permission: JSON.parse(JSON.stringify(permission)),
-                        inaccuracy: JSON.parse(JSON.stringify(inaccuracy))
-                    });
-
-                    worker.onmessage = evt => {
-
-                        const data = JSON.parse(JSON.stringify(evt.data));
-
-                        data.diapasonPoints.length && setOpenFarPointsModal(true);
-
-                        setMooeDoc(data.mooeDoc);
-
-                        setDiapasonPoints(data.diapasonPoints);
-
-                        setIsLoading(false);
-
-                        clearInterval(interval);
-
-                        console.timeEnd("Converting files");
-                    };
-
-                }
-                else {
-                    console.time("Converting files");
-
-                    console.log("Web worker не поддерживается браузером!");
-
-
-                    const parser = new DxfParser();
-
-                    const dxf = parser.parse(fileStr);
-
-                    console.log("dxf: ", dxf);
-
-                    const data = dxf ? getMooe(dxf, mooeDoc, permission, inaccuracy) : { mooeDoc: emptyMooe, diapasonPoints: [] };
-
-                    data.diapasonPoints.length && setOpenFarPointsModal(true);
-
-                    setDiapasonPoints(data.diapasonPoints);
-
-                    setMooeDoc(data.mooeDoc);
-
-                    setIsLoading(false);
-
-                    clearInterval(interval);
-
-                    console.timeEnd("Converting files");
-                }
-
-            } catch (err: any) {
-                return console.error(err.stack);
-            }
+            setDXFStr(reader.result as string);
 
         };
 
@@ -135,8 +51,7 @@ const UploadForm = observer(() => {
         setRefFileName(null);
         setLoadingTime([0, 0]);
         setMooeDoc(emptyMooe);
-        refTime.current[0] = 0
-        refTime.current[1] = 0
+        setRefTime([0, 0]);
     }
 
     const handleOk = () => {
