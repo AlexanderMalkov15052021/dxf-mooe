@@ -1,4 +1,4 @@
-import { distToGateCachePoint, distToTargrtPoint, firstPointId, maxDist, scaleCorrection } from "@/constants";
+import { distToEndPointRoad, distToGateCachePoint, distToTargrtPoint, firstPointId, maxDist, scaleCorrection } from "@/constants";
 // import { distToGateCachePoint, distToGatePrePoint, distToTargrtPoint, firstPointId, maxDist, scaleCorrection } from "@/constants";
 import { cachePoint } from "@/helpers/elements/cachePoint";
 // import { prePoint } from "@/helpers/elements/prePoint";
@@ -86,16 +86,16 @@ export const setGatePallets = (mooeDoc: MooeDoc, palletes: any, palletLines: any
 
         mooeDoc.mLaneMarks.push(windingPoint(
             mooeDoc.mLaneMarks.length + firstPointId,
-            pointX,
-            pointY,
+            pointX + (distToEndPointRoad * Math.cos(angle)),
+            pointY + (distToEndPointRoad * Math.sin(angle)),
             angle,
             obj.text.replace(" ", "")
         ));
 
         mooeDoc.mLaneMarks.push(cachePoint(
             mooeDoc.mLaneMarks.length + firstPointId,
-            pointX + (distToGateCachePoint * Math.cos(angle)),
-            pointY + (distToGateCachePoint * Math.sin(angle)),
+            pointX + ((distToGateCachePoint + distToEndPointRoad) * Math.cos(angle)),
+            pointY + ((distToGateCachePoint + distToEndPointRoad) * Math.sin(angle)),
             angle,
             `${obj.text.replace(" ", "")}识别`
         ));

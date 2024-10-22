@@ -1,4 +1,4 @@
-import { distToTargrtPoint, firstPointId, maxDist, scaleCorrection } from "@/constants";
+import { distToEndPointRoad, distToTargrtPoint, firstPointId, maxDist, scaleCorrection } from "@/constants";
 // import { prePoint } from "@/helpers/elements/prePoint";
 import { targetPoint } from "@/helpers/elements/targetPoint";
 import { windingPoint } from "@/helpers/elements/windingPoint";
@@ -67,16 +67,16 @@ export const setRestPoints = (mooeDoc: MooeDoc, rests: any, restLines: any, line
 
         mooeDoc.mLaneMarks.push(windingPoint(
             mooeDoc.mLaneMarks.length + firstPointId,
-            pointX,
-            pointY,
+            pointX + (distToEndPointRoad * Math.cos(angle)),
+            pointY + (distToEndPointRoad * Math.sin(angle)),
             angle,
             obj.text.replace(" ", "")
         ));
 
         mooeDoc.mLaneMarks.push(targetPoint(
             mooeDoc.mLaneMarks.length + firstPointId,
-            pointX + (distToTargrtPoint * Math.cos(angle)),
-            pointY + (distToTargrtPoint * Math.sin(angle)),
+            pointX + ((distToTargrtPoint + distToEndPointRoad) * Math.cos(angle)),
+            pointY + ((distToTargrtPoint + distToEndPointRoad) * Math.sin(angle)),
             angle,
             `${obj.text.replace(" ", "")}检`
         ));

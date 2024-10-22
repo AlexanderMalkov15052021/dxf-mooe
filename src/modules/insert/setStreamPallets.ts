@@ -1,4 +1,4 @@
-import { distToCachePoint, distToTargrtPoint, firstPointId, maxDist, scaleCorrection } from "@/constants";
+import { distToCachePoint, distToTargrtPoint, firstPointId, maxDist, scaleCorrection, distToEndPointRoad } from "@/constants";
 import { cachePoint } from "@/helpers/elements/cachePoint";
 import { targetPoint } from "@/helpers/elements/targetPoint";
 import { windingPoint } from "@/helpers/elements/windingPoint";
@@ -67,24 +67,24 @@ export const setStreamPallets = (mooeDoc: MooeDoc, pallete: any, palletLines: an
 
         mooeDoc.mLaneMarks.push(windingPoint(
             mooeDoc.mLaneMarks.length + firstPointId,
-            pointX,
-            pointY,
+            pointX + (distToEndPointRoad * Math.cos(angle)),
+            pointY + (distToEndPointRoad * Math.sin(angle)),
             angle,
             obj.text.replace(" ", "")
         ));
 
         mooeDoc.mLaneMarks.push(cachePoint(
             mooeDoc.mLaneMarks.length + firstPointId,
-            pointX + (distToCachePoint * Math.cos(angle)),
-            pointY + (distToCachePoint * Math.sin(angle)),
+            pointX + ((distToCachePoint + distToEndPointRoad) * Math.cos(angle)),
+            pointY + ((distToCachePoint + distToEndPointRoad) * Math.sin(angle)),
             angle,
             `${obj.text.replace(" ", "")}识别`
         ));
 
         mooeDoc.mLaneMarks.push(targetPoint(
             mooeDoc.mLaneMarks.length + firstPointId,
-            pointX + (distToTargrtPoint * Math.cos(angle)),
-            pointY + (distToTargrtPoint * Math.sin(angle)),
+            pointX + ((distToTargrtPoint + distToEndPointRoad) * Math.cos(angle)),
+            pointY + ((distToTargrtPoint + distToEndPointRoad) * Math.sin(angle)),
             angle,
             `${obj.text.replace(" ", "")}检`
         ));
