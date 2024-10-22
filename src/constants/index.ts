@@ -1,4 +1,4 @@
-export const distToEndPointRoad = .45;
+export const distToEndPointRoad = .15;
 export const scaleCorrection = .001;
 export const maxDist = 1000;
 export const distToTargrtPoint = .4;
