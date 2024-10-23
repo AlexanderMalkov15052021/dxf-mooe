@@ -25,6 +25,28 @@ export const setGatePallets = (mooeDoc: MooeDoc, palletes: any, palletLines: any
 
     // }, {});
 
+    const colsName = palletes?.reduce((acum: any, obj: any) => {
+
+        const textParts = obj.text.toLowerCase().split("col");
+        const strsColumnsAndRows = textParts[1].split("row");
+
+        const colName = `${textParts[0]}col${strsColumnsAndRows[0]}`;
+
+        const rowNum = strsColumnsAndRows[1][0] === "0" ? Number(strsColumnsAndRows[1][1]) : Number(strsColumnsAndRows[1]);
+
+        !acum.hasOwnProperty(colName) && (acum = { ...acum, ...{ [colName]: rowNum } });
+
+        acum[colName] < rowNum && (acum[colName] = rowNum);
+
+        return acum;
+
+    }, {});
+
+    const targetNames = Object.keys(colsName)
+        .map(colName => colsName[colName] < 10
+            ? `${colName}row0${colsName[colName]}`
+            : `${colName}row${colsName[colName]}`);
+
     palletes?.map((obj: any) => {
 
         const pointX = obj.position.x * scaleCorrection;
@@ -100,14 +122,30 @@ export const setGatePallets = (mooeDoc: MooeDoc, palletes: any, palletLines: any
             `${obj.text.replace(" ", "")}识别`
         ));
 
-        if (obj.text.includes("row09")) {
-            mooeDoc.mLaneMarks.push(targetPoint(
-                mooeDoc.mLaneMarks.length + firstPointId,
-                lineData.line.vertices[1].x * scaleCorrection + (distToTargrtPoint * Math.cos(targetAngle)),
-                lineData.line.vertices[1].y * scaleCorrection + (distToTargrtPoint * Math.sin(targetAngle)),
-                targetAngle,
-                `${obj.text.replace(" ", "")}前置点`
-            ));
+
+        if (targetNames.includes(obj.text.toLowerCase())) {
+
+            const rowStr = obj.text.split("row")[1];
+
+            const rowNum = rowStr[0] === "0" ? Number(rowStr[1]) : Number(rowStr);
+
+            for (let i = 0; i < rowNum; i++) {
+                mooeDoc.mLaneMarks.push(targetPoint(
+                    mooeDoc.mLaneMarks.length + firstPointId,
+                    lineData.line.vertices[1].x * scaleCorrection + (distToTargrtPoint * Math.cos(targetAngle)),
+                    lineData.line.vertices[1].y * scaleCorrection + (distToTargrtPoint * Math.sin(targetAngle)),
+                    targetAngle,
+                    `${obj.text.replace(" ", "")}前置点`
+                ));
+
+                mooeDoc.mLaneMarks.push(targetPoint(
+                    mooeDoc.mLaneMarks.length + firstPointId,
+                    pointX + ((distToGateCachePoint + distToEndPointRoad) * Math.cos(angle)),
+                    pointY + ((distToGateCachePoint + distToEndPointRoad) * Math.sin(angle)),
+                    angle,
+                    `${obj.text.replace(" ", "")}检`
+                ));
+            }
         }
 
 
