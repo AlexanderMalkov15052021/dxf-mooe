@@ -47,7 +47,11 @@ export const setGatePallets = (mooeDoc: MooeDoc, palletes: any, palletLines: any
             ? `${colName}row0${colsName[colName]}`
             : `${colName}row${colsName[colName]}`);
 
+    // console.log(targetNames);
+
     palletes?.map((obj: any) => {
+
+        // console.log(obj);
 
         const pointX = obj.position.x * scaleCorrection;
         const pointY = obj.position.y * scaleCorrection;
@@ -130,12 +134,17 @@ export const setGatePallets = (mooeDoc: MooeDoc, palletes: any, palletLines: any
             const rowNum = rowStr[0] === "0" ? Number(rowStr[1]) : Number(rowStr);
 
             for (let i = 0; i < rowNum; i++) {
+
+                const nameParts = obj.text.split("row");
+
+                const targetName = i < 9 ? `${nameParts[0]}row0${i + 1}` : `${nameParts[0]}row${i + 1}`;
+
                 mooeDoc.mLaneMarks.push(targetPoint(
                     mooeDoc.mLaneMarks.length + firstPointId,
                     lineData.line.vertices[1].x * scaleCorrection + (distToTargrtPoint * Math.cos(targetAngle)),
                     lineData.line.vertices[1].y * scaleCorrection + (distToTargrtPoint * Math.sin(targetAngle)),
                     targetAngle,
-                    `${obj.text.replace(" ", "")}前置点`
+                    `${targetName.replace(" ", "")}前置点`
                 ));
 
                 mooeDoc.mLaneMarks.push(targetPoint(
@@ -143,11 +152,11 @@ export const setGatePallets = (mooeDoc: MooeDoc, palletes: any, palletLines: any
                     pointX + ((distToGateCachePoint + distToEndPointRoad) * Math.cos(angle)),
                     pointY + ((distToGateCachePoint + distToEndPointRoad) * Math.sin(angle)),
                     angle,
-                    `${obj.text.replace(" ", "")}检`
+                    `${targetName.replace(" ", "")}检`
                 ));
+
             }
         }
-
 
         // const textParts = obj.text.split("col");
         // const gate = textParts[0];
