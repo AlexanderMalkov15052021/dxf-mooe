@@ -43,7 +43,7 @@ export const setLines = (mooeDoc: MooeDoc, lines: any, permission: number, inacc
             !obj2 ? { x: pointX2, y: pointY2 } : { x: obj2?.mLaneMarkXYZW.x, y: obj2?.mLaneMarkXYZW.y },
             mooeDoc.mRoads.length + firstLaneId,
             Math.PI / 2,
-            1,
+            obj.layer === "Bidirectional roads" ? 0 : 1,
             mooeDoc.mRoads.length + firstRoadId
         ));
 
