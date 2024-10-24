@@ -27,8 +27,22 @@ class ConverterStor {
 
     intervalDelay = 1000;
 
+    values: FieldType = {
+        rotAngle: "0",
+        autocadPointX: "0",
+        autocadPointY: "0",
+        moeePointX: "0",
+        moeePointY: "0",
+        inaccuracy: this.inaccuracy,
+        permission: this.permission,
+    };
+
     constructor() {
         makeAutoObservable(this);
+    }
+
+    setRotAngle = (val: string) => {
+        this.values.rotAngle = val;
     }
 
     setRefTime = (val: [number, number]) => {
@@ -56,84 +70,95 @@ class ConverterStor {
         this.permission = val;
     }
 
+
+
+    applyValues = (values: FieldType) => {
+
+
+
+        const shiftX = Number(values.moeePointX) - Number(values.autocadPointX);
+        const shiftY = Number(values.moeePointY) - Number(values.autocadPointY);
+
+        this.setMooeDoc({
+            ...this.mooeDoc,
+            mLaneMarks: this.mooeDoc.mLaneMarks.map(obj => ({
+                ...obj,
+                mLaneMarkXYZW: {
+                    ...obj.mLaneMarkXYZW,
+                    x: obj.mLaneMarkXYZW.x + shiftX,
+                    y: obj.mLaneMarkXYZW.y + shiftY,
+                }
+            })),
+
+            mRoads: this.mooeDoc.mRoads.map((obj: any) => {
+
+                if (obj.mLanes[0].hasOwnProperty('mBezierControl')) {
+                    return {
+                        ...obj,
+
+                        mLanes: [
+                            {
+                                ...obj.mLanes[0],
+
+                                mBezierControl: {
+                                    ...obj.mLanes[0]?.mBezierControl,
+                                    x: obj.mLanes[0]?.mBezierControl.x + shiftX,
+                                    y: obj.mLanes[0]?.mBezierControl.y + shiftY
+                                }
+                            }
+                        ]
+                    }
+                }
+
+                if (obj.mLanes[0].hasOwnProperty('m_BezierControl1')) {
+                    return {
+                        ...obj,
+
+                        mLanes: [
+                            {
+                                ...obj.mLanes[0],
+
+                                m_BezierControl1: {
+                                    ...obj.mLanes[0]?.m_BezierControl1,
+                                    x: obj.mLanes[0]?.m_BezierControl1.x + shiftX * 50,
+                                    y: obj.mLanes[0]?.m_BezierControl1.y + shiftY * 50 * -1
+                                },
+
+                                m_BezierControl2: {
+                                    ...obj.mLanes[0]?.m_BezierControl2,
+                                    x: obj.mLanes[0]?.m_BezierControl2.x + shiftX * 50,
+                                    y: obj.mLanes[0]?.m_BezierControl2.y + shiftY * 50 * -1
+                                }
+                            }
+                        ]
+                    }
+                }
+
+                return { ...obj }
+
+            }),
+
+            mapRotateAngle: Number(values.rotAngle),
+
+        });
+
+        this.isLoading = false;
+
+    }
+
+
+
+
     setParams = (values: FieldType) => {
 
-        this.setIsLoading(true);
+        this.values = values;
 
-        const applyDXFData = () => {
-            const shiftX = Number(values.moeePointX) - Number(values.autocadPointX);
-            const shiftY = Number(values.moeePointY) - Number(values.autocadPointY);
+        console.log(values);
 
-            this.applyDXFData();
+        this.isLoading = true;
 
-            this.setMooeDoc({
-                ...this.mooeDoc,
-                mLaneMarks: this.mooeDoc.mLaneMarks.map(obj => ({
-                    ...obj,
-                    mLaneMarkXYZW: {
-                        ...obj.mLaneMarkXYZW,
-                        x: obj.mLaneMarkXYZW.x + shiftX,
-                        y: obj.mLaneMarkXYZW.y + shiftY,
-                    }
-                })),
+        setTimeout(() => this.applyValues(values));
 
-                mRoads: this.mooeDoc.mRoads.map((obj: any) => {
-
-                    if (obj.mLanes[0].hasOwnProperty('mBezierControl')) {
-                        return {
-                            ...obj,
-
-                            mLanes: [
-                                {
-                                    ...obj.mLanes[0],
-
-                                    mBezierControl: {
-                                        ...obj.mLanes[0]?.mBezierControl,
-                                        x: obj.mLanes[0]?.mBezierControl.x + shiftX,
-                                        y: obj.mLanes[0]?.mBezierControl.y + shiftY
-                                    }
-                                }
-                            ]
-                        }
-                    }
-
-                    if (obj.mLanes[0].hasOwnProperty('m_BezierControl1')) {
-                        return {
-                            ...obj,
-
-                            mLanes: [
-                                {
-                                    ...obj.mLanes[0],
-
-                                    m_BezierControl1: {
-                                        ...obj.mLanes[0]?.m_BezierControl1,
-                                        x: obj.mLanes[0]?.m_BezierControl1.x + shiftX * 50,
-                                        y: obj.mLanes[0]?.m_BezierControl1.y + shiftY * 50 * -1
-                                    },
-
-                                    m_BezierControl2: {
-                                        ...obj.mLanes[0]?.m_BezierControl2,
-                                        x: obj.mLanes[0]?.m_BezierControl2.x + shiftX * 50,
-                                        y: obj.mLanes[0]?.m_BezierControl2.y + shiftY * 50 * -1
-                                    }
-                                }
-                            ]
-                        }
-                    }
-
-                    return { ...obj }
-
-                }),
-
-                mapRotateAngle: Number(values.rotAngle),
-
-            });
-
-            this.setIsLoading(false);
-
-        }
-
-        setTimeout(applyDXFData);
     }
 
     applyDXFData = () => {
@@ -176,6 +201,8 @@ class ConverterStor {
 
                     this.setMooeDoc(data.mooeDoc);
 
+                    this.applyValues(this.values);
+
                     this.setDiapasonPoints(data.diapasonPoints);
 
                     this.setIsLoading(false);
@@ -207,6 +234,8 @@ class ConverterStor {
                 this.setDiapasonPoints(data.diapasonPoints);
 
                 this.setMooeDoc(data.mooeDoc);
+
+                this.applyValues(this.values);
 
                 this.setIsLoading(false);
 

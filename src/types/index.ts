@@ -361,7 +361,6 @@ export type FieldType = {
     autocadPointY: string;
     moeePointX: string;
     moeePointY: string;
-    moeePoint: string;
     inaccuracy: string;
     permission: string;
 };

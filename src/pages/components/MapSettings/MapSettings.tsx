@@ -9,7 +9,7 @@ import { FormEvent } from "react";
 
 const MapSettings = observer(() => {
     const {
-        store: { mooeDoc, dxfStr, inaccuracy, permission, setInaccuracy, setParams, setPermission },
+        store: { mooeDoc, dxfStr, inaccuracy, permission, setInaccuracy, setParams, setPermission, setRotAngle },
     } = ConverterStor;
 
     const [form] = Form.useForm();
@@ -28,6 +28,10 @@ const MapSettings = observer(() => {
 
     const permissionhcangeHandler = (evt: FormEvent<HTMLInputElement>) => {
         setPermission(evt.currentTarget.value);
+    }
+
+    const changeRotAngleHandler = (evt: FormEvent<HTMLInputElement>) => {
+        setRotAngle(evt.currentTarget.value);
     }
 
     return <>
@@ -63,7 +67,7 @@ const MapSettings = observer(() => {
                                 rules={[{ required: true, message: 'Пожалуйста, введите угол поворота!' }]}
                                 className={styles["input-wrapper"]}
                             >
-                                <Input type="number" autoComplete="on" />
+                                <Input onChange={changeRotAngleHandler} type="number" autoComplete="on" />
                             </Form.Item>
 
                         </div>
