@@ -3,6 +3,7 @@ import { IDxf } from "dxf-parser";
 type DXFDataType = {
     quadraticSpline: any;
     streamPallets: any;
+    targetPoints: any;
     gatePallets: any;
     palletLines: any;
     chargeLines: any;
@@ -35,10 +36,13 @@ export const getDXFData = (dxf: IDxf) => {
         obj.layer === "Flow pallets" && accum.gatePallets.push(obj);
         obj.layer === "Alley pallets" && accum.streamPallets.push(obj);
 
+        obj.layer === "Target points" && accum.targetPoints.push(obj);
+
         return accum;
     }, {
         quadraticSpline: [],
         streamPallets: [],
+        targetPoints: [],
         gatePallets: [],
         palletLines: [],
         chargeLines: [],

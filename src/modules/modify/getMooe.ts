@@ -9,6 +9,7 @@ import { setChargePoints } from "../insert/setChargePoints";
 import { getDXFData } from "../extract/getDXFData";
 import { setCubicSpline } from "../insert/setCubicSpline";
 import { MooeDoc } from "@/types";
+import { setTargetPoints } from "../insert/setTargetPoints";
 
 export const getMooe = (dxf: IDxf, mooeDoc: MooeDoc, permission: string, inaccuracy: string) => {
 
@@ -24,6 +25,8 @@ export const getMooe = (dxf: IDxf, mooeDoc: MooeDoc, permission: string, inaccur
     setGatePallets(mooeDoc, DXFData.gatePallets, DXFData.gateLines, DXFData.lines);
     setRestPoints(mooeDoc, DXFData.rests, DXFData.restLines, DXFData.lines);
     setChargePoints(mooeDoc, DXFData.charges, DXFData.chargeLines, DXFData.lines);
+
+    setTargetPoints(mooeDoc, DXFData.targetPoints, DXFData.lines);
 
     setLayerSize(mooeDoc, DXFData.layer);
 
