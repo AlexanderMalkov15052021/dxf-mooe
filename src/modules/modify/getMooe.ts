@@ -18,17 +18,22 @@ export const getMooe = (dxf: IDxf, mooeDoc: MooeDoc, permission: string, inaccur
 
     const DXFData = getDXFData(dxf);
 
-    const linePointsDiapason = setLines(mooeDoc, DXFData.lines, numPerm, numInc);
+    console.log("lines: ", DXFData.lines);
+    
+    const lines = [...DXFData.lines, ...DXFData.chargeLines, ...DXFData.restLines, ...DXFData.palletLines, ...DXFData.gateLines];
+
+    const linePointsDiapason = setLines(mooeDoc, lines, numPerm, numInc);
     const cubicSplinePointsDiapason = setCubicSpline(mooeDoc, DXFData.cubicSpline, numPerm, numInc);
     const quadraticSplinePointsDiapason = setQuadraticSpline(mooeDoc, DXFData.quadraticSpline, numPerm, numInc);
-    setStreamPallets(mooeDoc, DXFData.streamPallets, DXFData.palletLines, DXFData.lines);
-    setGatePallets(mooeDoc, DXFData.gatePallets, DXFData.gateLines, DXFData.lines);
-    setRestPoints(mooeDoc, DXFData.rests, DXFData.restLines, DXFData.lines);
-    setChargePoints(mooeDoc, DXFData.charges, DXFData.chargeLines, DXFData.lines);
+    
+    DXFData.streamPallets && setStreamPallets(mooeDoc, DXFData.streamPallets, DXFData.palletLines, lines);
+    DXFData.gatePallets && setGatePallets(mooeDoc, DXFData.gatePallets, DXFData.gateLines, lines);
+    DXFData.rests && setRestPoints(mooeDoc, DXFData.rests, DXFData.restLines, lines);
+    DXFData.chargeLines && setChargePoints(mooeDoc, DXFData.charges, DXFData.chargeLines, lines);
 
-    setTargetPoints(mooeDoc, DXFData.targetPoints, DXFData.lines);
+    DXFData.targetPoints && setTargetPoints(mooeDoc, DXFData.targetPoints, lines);
 
-    setLayerSize(mooeDoc, DXFData.layer);
+    DXFData.layer && setLayerSize(mooeDoc, DXFData.layer);
 
     return { mooeDoc, diapasonPoints: [...linePointsDiapason, ...cubicSplinePointsDiapason, ...quadraticSplinePointsDiapason] };
 

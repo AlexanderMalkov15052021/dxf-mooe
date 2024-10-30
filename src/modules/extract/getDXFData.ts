@@ -25,7 +25,7 @@ export const getDXFData = (dxf: IDxf) => {
         obj.layer === "Layer" && (accum.layer = obj);
         obj.layer === "Rest points" && accum.rests.push(obj);
 
-        obj.type === "LINE" && accum.lines.push(obj);
+        obj.layer === "Straight roads" && accum.lines.push(obj);
 
         obj.layer === "Charge points" && accum.charges.push(obj);
         obj.layer === "Charge roads" && accum.chargeLines.push(obj);
