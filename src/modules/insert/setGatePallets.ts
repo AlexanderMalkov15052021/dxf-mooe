@@ -3,26 +3,31 @@ import { cachePoint } from "@/helpers/elements/cachePoint";
 import { targetPoint } from "@/helpers/elements/targetPoint";
 import { windingPoint } from "@/helpers/elements/windingPoint";
 import { getAtan2, getDistPointToline, getDistTwoPoints } from "@/helpers/math";
-import { MooeDoc } from "@/types";
+import { Coords, MooeDoc } from "@/types";
 
-export const setGatePallets = (mooeDoc: MooeDoc, palletes: any, palletLines: any, lines: any) => {
+export const setGatePallets = (mooeDoc: MooeDoc, palletes: any, palletLines: any, lines: any, origin: Coords) => {
 
     const linesAndPallets = palletes.reduce((accum: any, pallet: any) => {
 
         const lineData = palletLines.reduce((accum: { dist: number, line: any }, line: any) => {
 
             const dist = getDistPointToline(
-                pallet.position.x * scaleCorrection,
-                pallet.position.y * scaleCorrection,
-                line.vertices[0].x * scaleCorrection,
-                line.vertices[0].y * scaleCorrection,
-                line.vertices[1].x * scaleCorrection,
-                line.vertices[1].y * scaleCorrection
+                (pallet.position.x + origin.x) * scaleCorrection,
+                (pallet.position.y + origin.y) * scaleCorrection,
+                (line.vertices[0].x + origin.x) * scaleCorrection,
+                (line.vertices[0].y + origin.y) * scaleCorrection,
+                (line.vertices[1].x + origin.x) * scaleCorrection,
+                (line.vertices[1].y + origin.y) * scaleCorrection
             );
 
             if (dist < accum.dist) {
                 accum.dist = dist;
-                accum.line = line;
+                accum.line = {
+                    ...line, vertices: [
+                        { x: line.vertices[0].x + origin.x, y: line.vertices[0].y + origin.y },
+                        { x: line.vertices[1].x + origin.x, y: line.vertices[1].y + origin.y }
+                    ]
+                };
             }
 
             return accum;
@@ -120,10 +125,10 @@ export const setGatePallets = (mooeDoc: MooeDoc, palletes: any, palletLines: any
                     * Math.cos(targetLinesAndPallets[key].angle + Math.PI / 2)),
                 targetLinesAndPallets[key].baseLine.vertices[1].y * scaleCorrection - ((distToTargrtPoint / 2)
                     * Math.sin(targetLinesAndPallets[key].angle + Math.PI / 2)),
-                line.vertices[0].x * scaleCorrection,
-                line.vertices[0].y * scaleCorrection,
-                line.vertices[1].x * scaleCorrection,
-                line.vertices[1].y * scaleCorrection
+                (line.vertices[0].x + origin.x) * scaleCorrection,
+                (line.vertices[0].y + origin.y) * scaleCorrection,
+                (line.vertices[1].x + origin.x) * scaleCorrection,
+                (line.vertices[1].y + origin.y) * scaleCorrection
             );
 
             if (dist < accum.dist) {

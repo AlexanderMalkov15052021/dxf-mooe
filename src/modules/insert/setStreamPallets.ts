@@ -3,23 +3,23 @@ import { cachePoint } from "@/helpers/elements/cachePoint";
 import { targetPoint } from "@/helpers/elements/targetPoint";
 import { windingPoint } from "@/helpers/elements/windingPoint";
 import { getAtan2, getDistPointToline } from "@/helpers/math";
-import { MooeDoc } from "@/types";
+import { Coords, MooeDoc } from "@/types";
 
-export const setStreamPallets = (mooeDoc: MooeDoc, pallete: any, palletLines: any, lines: any) => {
+export const setStreamPallets = (mooeDoc: MooeDoc, pallete: any, palletLines: any, lines: any, origin: Coords) => {
     pallete?.map((obj: any) => {
 
-        const pointX = obj.position.x * scaleCorrection;
-        const pointY = obj.position.y * scaleCorrection;
+        const pointX = (obj.position.x + origin.x) * scaleCorrection;
+        const pointY = (obj.position.y + origin.y) * scaleCorrection;
 
         const lineData = palletLines.reduce((accum: { dist: number, line: any }, line: any) => {
 
             const dist = getDistPointToline(
                 pointX,
                 pointY,
-                line.vertices[0].x * scaleCorrection,
-                line.vertices[0].y * scaleCorrection,
-                line.vertices[1].x * scaleCorrection,
-                line.vertices[1].y * scaleCorrection
+                (line.vertices[0].x + origin.x) * scaleCorrection,
+                (line.vertices[0].y + origin.y) * scaleCorrection,
+                (line.vertices[1].x + origin.x) * scaleCorrection,
+                (line.vertices[1].y + origin.y) * scaleCorrection
             );
 
             if (dist < accum.dist) {

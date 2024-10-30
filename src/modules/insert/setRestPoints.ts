@@ -3,9 +3,9 @@ import { distToEndPointRoad, distToTargrtPoint, firstPointId, maxDist, scaleCorr
 import { targetPoint } from "@/helpers/elements/targetPoint";
 import { windingPoint } from "@/helpers/elements/windingPoint";
 import { getAtan2, getDistPointToline } from "@/helpers/math";
-import { MooeDoc } from "@/types";
+import { Coords, MooeDoc } from "@/types";
 
-export const setRestPoints = (mooeDoc: MooeDoc, rests: any, restLines: any, lines: any) => {
+export const setRestPoints = (mooeDoc: MooeDoc, rests: any, restLines: any, lines: any, origin: Coords) => {
     rests?.map((obj: any) => {
 
         const pointX = obj.position.x * scaleCorrection;
@@ -16,15 +16,20 @@ export const setRestPoints = (mooeDoc: MooeDoc, rests: any, restLines: any, line
             const dist = getDistPointToline(
                 pointX,
                 pointY,
-                line.vertices[0].x * scaleCorrection,
-                line.vertices[0].y * scaleCorrection,
-                line.vertices[1].x * scaleCorrection,
-                line.vertices[1].y * scaleCorrection
+                (line.vertices[0].x + origin.x) * scaleCorrection,
+                (line.vertices[0].y + origin.y) * scaleCorrection,
+                (line.vertices[1].x + origin.x) * scaleCorrection,
+                (line.vertices[1].y + origin.y) * scaleCorrection
             );
 
             if (dist < accum.dist) {
                 accum.dist = dist;
-                accum.line = line;
+                accum.line = {
+                    ...line, vertices: [
+                        { x: line.vertices[0].x + origin.x, y: line.vertices[0].y + origin.y },
+                        { x: line.vertices[1].x + origin.x, y: line.vertices[1].y + origin.y }
+                    ]
+                };
             }
 
             return accum;

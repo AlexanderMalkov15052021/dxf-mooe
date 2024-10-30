@@ -269,7 +269,7 @@ export type MooeDoc = {
 };
 
 export type Coords = {
-    x: number; y: number
+    x: number; y: number; z: number;
 };
 
 export interface BezierCurve {

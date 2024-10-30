@@ -2,17 +2,17 @@ import { firstLaneId, firstPointId, firstRoadId, scaleCorrection } from "@/const
 import { quadraticSpline } from "@/helpers/elements/quadraticSpline";
 import { roadPoint } from "@/helpers/elements/roadPoint";
 import { getDistTwoPoints, isNearestPoints } from "@/helpers/math";
-import { MooeDoc } from "@/types";
+import { Coords, MooeDoc } from "@/types";
 
-export const setQuadraticSpline = (mooeDoc: MooeDoc, spline: any, permission: number, inaccuracy: number) => {
+export const setQuadraticSpline = (mooeDoc: MooeDoc, spline: any, permission: number, inaccuracy: number, origin: Coords) => {
 
     const linePointsDiapason = spline?.map((obj: any) => {
 
-        const pointX1 = obj.controlPoints[0].x * scaleCorrection;
-        const pointY1 = obj.controlPoints[0].y * scaleCorrection;
+        const pointX1 = (obj.controlPoints[0].x + origin.x) * scaleCorrection;
+        const pointY1 = (obj.controlPoints[0].y + origin.y) * scaleCorrection;
 
-        const pointX2 = obj.controlPoints[2].x * scaleCorrection;
-        const pointY2 = obj.controlPoints[2].y * scaleCorrection;
+        const pointX2 = (obj.controlPoints[2].x + origin.x) * scaleCorrection;
+        const pointY2 = (obj.controlPoints[2].y + origin.y) * scaleCorrection;
 
         const obj1 = mooeDoc.mLaneMarks.find(
             (point: any) => isNearestPoints(
@@ -60,21 +60,21 @@ export const setQuadraticSpline = (mooeDoc: MooeDoc, spline: any, permission: nu
         mooeDoc.mRoads.push(quadraticSpline(
             targetObj1?.mLaneMarkID ?? 0,
             targetObj2?.mLaneMarkID ?? 0,
-            { x: targetObj1?.mLaneMarkXYZW.x, y: targetObj1?.mLaneMarkXYZW.y },
-            { x: targetObj2?.mLaneMarkXYZW.x, y: targetObj2?.mLaneMarkXYZW.y },
+            { x: targetObj1?.mLaneMarkXYZW.x, y: targetObj1?.mLaneMarkXYZW.y, z: targetObj1?.mLaneMarkXYZW.z },
+            { x: targetObj2?.mLaneMarkXYZW.x, y: targetObj2?.mLaneMarkXYZW.y, z: targetObj2?.mLaneMarkXYZW.z },
             mooeDoc.mRoads.length + firstLaneId,
             Math.PI / 2,
             1,
             mooeDoc.mRoads.length + firstRoadId,
             {
-                x: obj.controlPoints[1].x * scaleCorrection,
-                y: obj.controlPoints[1].y * scaleCorrection,
-                z: obj.controlPoints[1].z * scaleCorrection
+                x: (obj.controlPoints[1].x + origin.x) * scaleCorrection,
+                y: (obj.controlPoints[1].y + origin.y) * scaleCorrection,
+                z: (obj.controlPoints[1].z + origin.z) * scaleCorrection
             }
         ));
 
-        const objPos1 = isPermission1 && { x: obj1.mLaneMarkXYZW.x, y: obj1.mLaneMarkXYZW.y };
-        const objPos2 = isPermission2 && { x: obj2.mLaneMarkXYZW.x, y: obj2.mLaneMarkXYZW.y };
+        const objPos1 = isPermission1 && { x: obj1.mLaneMarkXYZW.x, y: obj1.mLaneMarkXYZW.y, z: obj1.mLaneMarkXYZW.z };
+        const objPos2 = isPermission2 && { x: obj2.mLaneMarkXYZW.x, y: obj2.mLaneMarkXYZW.y, z: obj2.mLaneMarkXYZW.z };
 
         return [objPos1, objPos2];
 

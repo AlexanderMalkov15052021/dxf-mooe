@@ -1,4 +1,5 @@
-import { IDxf } from "dxf-parser";
+import { Coords } from "@/types";
+import { IDxf, IViewPort } from "dxf-parser";
 
 type DXFDataType = {
     quadraticSpline: any;
@@ -18,7 +19,7 @@ type DXFDataType = {
 
 export const getDXFData = (dxf: IDxf) => {
 
-    return dxf?.entities.reduce<DXFDataType>((accum: any, obj: any) => {
+    const entities = dxf?.entities.reduce<DXFDataType>((accum: any, obj: any) => {
 
         obj.layer === "Quadratic spline roads" && accum.quadraticSpline.push(obj);
         obj.layer === "Cubic spline roads" && accum.cubicSpline.push(obj);
@@ -54,5 +55,13 @@ export const getDXFData = (dxf: IDxf) => {
         rests: [],
         layer: null,
     });
+
+    const viewPorts: IViewPort[] = dxf?.tables?.viewPort?.viewPorts;
+
+    const origin: Coords = viewPorts.length
+        ? dxf.tables.viewPort.viewPorts[0].ucsOrigin
+        : { x: 0, y: 0, z: 0 };
+
+    return { ...entities, origin }
 
 }
