@@ -8,8 +8,8 @@ import { Coords, MooeDoc } from "@/types";
 export const setChargePoints = (mooeDoc: MooeDoc, chargePoints: any, chargeLines: any, lines: any, origin: Coords) => {
     chargePoints?.map((obj: any) => {
 
-        const pointX = obj.position.x * scaleCorrection;
-        const pointY = obj.position.y * scaleCorrection;
+        const pointX = (obj.position.x + origin.x) * scaleCorrection;
+        const pointY = (obj.position.y + origin.y) * scaleCorrection;
 
         const lineData = chargeLines.reduce((accum: { dist: number, line: any }, line: any) => {
 

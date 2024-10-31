@@ -24,7 +24,12 @@ export const setStreamPallets = (mooeDoc: MooeDoc, pallete: any, palletLines: an
 
             if (dist < accum.dist) {
                 accum.dist = dist;
-                accum.line = line;
+                accum.line = {
+                    ...line, vertices: [
+                        { x: line.vertices[0].x + origin.x, y: line.vertices[0].y + origin.y },
+                        { x: line.vertices[1].x + origin.x, y: line.vertices[1].y + origin.y }
+                    ]
+                };
             }
 
             return accum;
@@ -43,10 +48,10 @@ export const setStreamPallets = (mooeDoc: MooeDoc, pallete: any, palletLines: an
             const dist = getDistPointToline(
                 lineData.line.vertices[1].x * scaleCorrection - ((distToTargrtPoint / 2) * Math.cos(angle + Math.PI / 2)),
                 lineData.line.vertices[1].y * scaleCorrection - ((distToTargrtPoint / 2) * Math.sin(angle + Math.PI / 2)),
-                line.vertices[0].x * scaleCorrection,
-                line.vertices[0].y * scaleCorrection,
-                line.vertices[1].x * scaleCorrection,
-                line.vertices[1].y * scaleCorrection
+                (line.vertices[0].x + origin.x) * scaleCorrection,
+                (line.vertices[0].y + origin.y) * scaleCorrection,
+                (line.vertices[1].x + origin.x) * scaleCorrection,
+                (line.vertices[1].y + origin.y) * scaleCorrection
             );
 
             if (dist < accum.dist) {

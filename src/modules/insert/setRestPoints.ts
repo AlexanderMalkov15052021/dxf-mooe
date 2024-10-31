@@ -8,8 +8,8 @@ import { Coords, MooeDoc } from "@/types";
 export const setRestPoints = (mooeDoc: MooeDoc, rests: any, restLines: any, lines: any, origin: Coords) => {
     rests?.map((obj: any) => {
 
-        const pointX = obj.position.x * scaleCorrection;
-        const pointY = obj.position.y * scaleCorrection;
+        const pointX = (obj.position.x + origin.x) * scaleCorrection;
+        const pointY = (obj.position.y + origin.y) * scaleCorrection;
 
         const lineData = restLines.reduce((accum: { dist: number, line: any }, line: any) => {
 
@@ -48,10 +48,10 @@ export const setRestPoints = (mooeDoc: MooeDoc, rests: any, restLines: any, line
             const dist = getDistPointToline(
                 lineData.line.vertices[1].x * scaleCorrection - ((distToTargrtPoint / 2) * Math.cos(angle + Math.PI / 2)),
                 lineData.line.vertices[1].y * scaleCorrection - ((distToTargrtPoint / 2) * Math.sin(angle + Math.PI / 2)),
-                line.vertices[0].x * scaleCorrection,
-                line.vertices[0].y * scaleCorrection,
-                line.vertices[1].x * scaleCorrection,
-                line.vertices[1].y * scaleCorrection
+                (line.vertices[0].x + origin.x) * scaleCorrection,
+                (line.vertices[0].y + origin.y) * scaleCorrection,
+                (line.vertices[1].x + origin.x) * scaleCorrection,
+                (line.vertices[1].y + origin.y) * scaleCorrection
             );
 
             if (dist < accum.dist) {
