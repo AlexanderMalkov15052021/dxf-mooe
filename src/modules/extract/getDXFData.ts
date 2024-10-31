@@ -60,7 +60,11 @@ export const getDXFData = (dxf: IDxf) => {
     const viewPorts: IViewPort[] = dxf?.tables?.viewPort?.viewPorts;
 
     const origin: Coords = viewPorts.length
-        ? dxf.tables.viewPort.viewPorts[0].ucsOrigin
+        ? {
+            x: dxf.tables.viewPort.viewPorts[0].ucsOrigin.x * -1,
+            y: dxf.tables.viewPort.viewPorts[0].ucsOrigin.y * -1,
+            z: dxf.tables.viewPort.viewPorts[0].ucsOrigin.z * -1
+        }
         : { x: 0, y: 0, z: 0 };
 
     return { ...entities, origin }
