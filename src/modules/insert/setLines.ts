@@ -7,6 +7,10 @@ import { Coords, MooeDoc } from "@/types";
 export const setLines = (mooeDoc: MooeDoc, lines: any, permission: number, inaccuracy: number, origin: Coords) => {
 
     const linePointsDiapason = lines?.map((obj: any) => {
+
+        const isPickUpLane = obj.layer.includes("Pallet roads") || obj.layer.includes("Charge roads")
+            || obj.layer.includes("Rest roads") || obj.layer.includes("Flow roads");
+
         const pointX1 = (obj.vertices[0].x + origin.x) * scaleCorrection;
         const pointY1 = (obj.vertices[0].y + origin.y) * scaleCorrection;
         const pointZ1 = (obj.vertices[0].z + origin.z) * scaleCorrection;
@@ -50,7 +54,8 @@ export const setLines = (mooeDoc: MooeDoc, lines: any, permission: number, inacc
             mooeDoc.mRoads.length + firstLaneId,
             Math.PI / 2,
             obj.layer === "Bidirectional roads" ? 0 : 1,
-            mooeDoc.mRoads.length + firstRoadId
+            mooeDoc.mRoads.length + firstRoadId,
+            isPickUpLane ? 1 : 0
         ));
 
         const objPos1 = isPermission1 && { x: obj1.mLaneMarkXYZW.x, y: obj1.mLaneMarkXYZW.y, z: obj1.mLaneMarkXYZW.z };
