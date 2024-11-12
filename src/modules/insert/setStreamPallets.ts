@@ -1,8 +1,8 @@
-import { distToCachePoint, distToTargrtPoint, firstPointId, maxDist, scaleCorrection, distToEndPointRoad } from "@/constants";
+import { distToCachePoint, distToTargrtPoint, firstPointId, maxDist, scaleCorrection } from "@/constants";
 import { cachePoint } from "@/helpers/elements/cachePoint";
 import { targetPoint } from "@/helpers/elements/targetPoint";
 import { windingPoint } from "@/helpers/elements/windingPoint";
-import { getAtan2, getDistPointToline } from "@/helpers/math";
+import { getAtan2, getDistPointToline, getPerpendicularBase } from "@/helpers/math";
 import { Coords, MooeDoc } from "@/types";
 
 export const setStreamPallets = (mooeDoc: MooeDoc, pallete: any, palletLines: any, lines: any, origin: Coords) => {
@@ -70,26 +70,44 @@ export const setStreamPallets = (mooeDoc: MooeDoc, pallete: any, palletLines: an
             targetLineData.line.vertices[1].y
         );
 
+        const distToRoad = getDistPointToline(
+            pointX,
+            pointY,
+            lineData.line.vertices[0].x * scaleCorrection,
+            lineData.line.vertices[0].y * scaleCorrection,
+            lineData.line.vertices[1].x * scaleCorrection,
+            lineData.line.vertices[1].y * scaleCorrection
+        );
+
+        const perpendicularBase = getPerpendicularBase(lineData.line.vertices[0], lineData.line.vertices[1], pointX, pointY);
+
+        const angleToBasePoint = getAtan2(
+            pointX,
+            pointY,
+            perpendicularBase.x,
+            perpendicularBase.y
+        );
+
         mooeDoc.mLaneMarks.push(windingPoint(
             mooeDoc.mLaneMarks.length + firstPointId,
-            pointX + (distToEndPointRoad * Math.cos(angle)),
-            pointY + (distToEndPointRoad * Math.sin(angle)),
+            angleToBasePoint ? pointX + (distToRoad * Math.cos(angleToBasePoint)) : pointX,
+            angleToBasePoint ? pointY + (distToRoad * Math.sin(angleToBasePoint)) : pointY,
             angle,
             obj.text.replace(" ", "")
         ));
 
         mooeDoc.mLaneMarks.push(cachePoint(
             mooeDoc.mLaneMarks.length + firstPointId,
-            pointX + ((distToCachePoint + distToEndPointRoad) * Math.cos(angle)),
-            pointY + ((distToCachePoint + distToEndPointRoad) * Math.sin(angle)),
+            pointX + (distToCachePoint * Math.cos(angle)),
+            pointY + (distToCachePoint * Math.sin(angle)),
             angle,
             `${obj.text.replace(" ", "")}识别`
         ));
 
         mooeDoc.mLaneMarks.push(targetPoint(
             mooeDoc.mLaneMarks.length + firstPointId,
-            pointX + ((distToTargrtPoint + distToEndPointRoad) * Math.cos(angle)),
-            pointY + ((distToTargrtPoint + distToEndPointRoad) * Math.sin(angle)),
+            pointX + (distToTargrtPoint * Math.cos(angle)),
+            pointY + (distToTargrtPoint * Math.sin(angle)),
             angle,
             `${obj.text.replace(" ", "")}检`
         ));

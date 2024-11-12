@@ -1,8 +1,8 @@
-import { distToEndPointRoad, distToGateCachePoint, distToTargrtPoint, firstPointId, maxDist, scaleCorrection } from "@/constants";
+import { distToGateCachePoint, distToTargrtPoint, firstPointId, maxDist, scaleCorrection } from "@/constants";
 import { cachePoint } from "@/helpers/elements/cachePoint";
 import { targetPoint } from "@/helpers/elements/targetPoint";
 import { windingPoint } from "@/helpers/elements/windingPoint";
-import { getAtan2, getDistPointToline, getDistTwoPoints } from "@/helpers/math";
+import { getAtan2, getDistPointToline, getDistTwoPoints, getPerpendicularBase } from "@/helpers/math";
 import { Coords, MooeDoc } from "@/types";
 
 export const setGatePallets = (mooeDoc: MooeDoc, palletes: any, palletLines: any, lines: any, origin: Coords) => {
@@ -147,18 +147,41 @@ export const setGatePallets = (mooeDoc: MooeDoc, palletes: any, palletLines: any
             targetLineData.line.vertices[1].y
         );
 
+        const distToRoad = getDistPointToline(
+            pointX,
+            pointY,
+            targetLinesAndPallets[key].line.vertices[0].x * scaleCorrection,
+            targetLinesAndPallets[key].line.vertices[0].y * scaleCorrection,
+            targetLinesAndPallets[key].line.vertices[1].x * scaleCorrection,
+            targetLinesAndPallets[key].line.vertices[1].y * scaleCorrection
+        );
+
+        const perpendicularBase = getPerpendicularBase(
+            targetLinesAndPallets[key].line.vertices[0],
+            targetLinesAndPallets[key].line.vertices[1],
+            pointX,
+            pointY
+        );
+
+        const angleToBasePoint = getAtan2(
+            pointX,
+            pointY,
+            perpendicularBase.x,
+            perpendicularBase.y
+        );
+
         mooeDoc.mLaneMarks.push(windingPoint(
             mooeDoc.mLaneMarks.length + firstPointId,
-            pointX + (distToEndPointRoad * Math.cos(targetLinesAndPallets[key].angle)),
-            pointY + (distToEndPointRoad * Math.sin(targetLinesAndPallets[key].angle)),
+            angleToBasePoint ? pointX + (distToRoad * Math.cos(angleToBasePoint)) : pointX,
+            angleToBasePoint ? pointY + (distToRoad * Math.sin(angleToBasePoint)) : pointY,
             targetLinesAndPallets[key].angle,
             key.replace(" ", "")
         ));
 
         mooeDoc.mLaneMarks.push(cachePoint(
             mooeDoc.mLaneMarks.length + firstPointId,
-            pointX + ((distToGateCachePoint + distToEndPointRoad) * Math.cos(targetLinesAndPallets[key].angle)),
-            pointY + ((distToGateCachePoint + distToEndPointRoad) * Math.sin(targetLinesAndPallets[key].angle)),
+            pointX + (distToGateCachePoint * Math.cos(targetLinesAndPallets[key].angle)),
+            pointY + (distToGateCachePoint * Math.sin(targetLinesAndPallets[key].angle)),
             targetLinesAndPallets[key].angle,
             `${key.replace(" ", "")}识别`
         ));
@@ -173,8 +196,8 @@ export const setGatePallets = (mooeDoc: MooeDoc, palletes: any, palletLines: any
 
         mooeDoc.mLaneMarks.push(targetPoint(
             mooeDoc.mLaneMarks.length + firstPointId,
-            basePointX + ((distToGateCachePoint + distToEndPointRoad) * Math.cos(targetLinesAndPallets[key].angle)),
-            basePointY + ((distToGateCachePoint + distToEndPointRoad) * Math.sin(targetLinesAndPallets[key].angle)),
+            basePointX + (distToGateCachePoint * Math.cos(targetLinesAndPallets[key].angle)),
+            basePointY + (distToGateCachePoint * Math.sin(targetLinesAndPallets[key].angle)),
             targetLinesAndPallets[key].angle,
             `${key.replace(" ", "")}检`
         ));

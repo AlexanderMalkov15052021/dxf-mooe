@@ -272,6 +272,10 @@ export type Coords = {
     x: number; y: number; z: number;
 };
 
+export type Coords2D = {
+    x: number; y: number;
+};
+
 export interface BezierCurve {
     mBelongJunctionID: number
     mEndPosition: MEndPosition

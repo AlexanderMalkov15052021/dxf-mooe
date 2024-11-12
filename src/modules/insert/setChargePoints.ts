@@ -1,8 +1,8 @@
-import { distToEndPointRoad, distToTargrtPoint, firstPointId, maxDist, scaleCorrection } from "@/constants";
+import { distToTargrtPoint, firstPointId, maxDist, scaleCorrection } from "@/constants";
 // import { prePoint } from "@/helpers/elements/prePoint";
 import { targetPoint } from "@/helpers/elements/targetPoint";
 import { windingPoint } from "@/helpers/elements/windingPoint";
-import { getAtan2, getDistPointToline } from "@/helpers/math";
+import { getAtan2, getDistPointToline, getPerpendicularBase } from "@/helpers/math";
 import { Coords, MooeDoc } from "@/types";
 
 export const setChargePoints = (mooeDoc: MooeDoc, chargePoints: any, chargeLines: any, lines: any, origin: Coords) => {
@@ -70,18 +70,36 @@ export const setChargePoints = (mooeDoc: MooeDoc, chargePoints: any, chargeLines
             targetLineData.line.vertices[1].y
         );
 
+        const distToRoad = getDistPointToline(
+            pointX,
+            pointY,
+            lineData.line.vertices[0].x * scaleCorrection,
+            lineData.line.vertices[0].y * scaleCorrection,
+            lineData.line.vertices[1].x * scaleCorrection,
+            lineData.line.vertices[1].y * scaleCorrection
+        );
+
+        const perpendicularBase = getPerpendicularBase(lineData.line.vertices[0], lineData.line.vertices[1], pointX, pointY);
+
+        const angleToBasePoint = getAtan2(
+            pointX,
+            pointY,
+            perpendicularBase.x,
+            perpendicularBase.y
+        );
+
         mooeDoc.mLaneMarks.push(windingPoint(
             mooeDoc.mLaneMarks.length + firstPointId,
-            pointX + (distToEndPointRoad * Math.cos(angle)),
-            pointY + (distToEndPointRoad * Math.sin(angle)),
+            angleToBasePoint ? pointX + (distToRoad * Math.cos(angleToBasePoint)) : pointX,
+            angleToBasePoint ? pointY + (distToRoad * Math.sin(angleToBasePoint)) : pointY,
             angle,
             obj.text.replace(" ", "")
         ));
 
         mooeDoc.mLaneMarks.push(targetPoint(
             mooeDoc.mLaneMarks.length + firstPointId,
-            pointX + ((distToTargrtPoint + distToEndPointRoad) * Math.cos(angle)),
-            pointY + ((distToTargrtPoint + distToEndPointRoad) * Math.sin(angle)),
+            pointX + (distToTargrtPoint * Math.cos(angle)),
+            pointY + (distToTargrtPoint * Math.sin(angle)),
             angle,
             `${obj.text.replace(" ", "")}检`
         ));

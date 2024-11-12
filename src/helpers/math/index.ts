@@ -1,3 +1,6 @@
+import { scaleCorrection } from "@/constants";
+import { Coords2D } from "@/types";
+
 export const getDistTwoPoints = (x1: number, y1: number, x2: number, y2: number) => Math.hypot(x2 - x1, y2 - y1);
 
 export const isNearestPoints = (x1: number, y1: number, x2: number, y2: number, inac: number) => Math.hypot(x2 - x1, y2 - y1) < inac;
@@ -46,4 +49,25 @@ export const getDistPointToline = (x: number, y: number, x1: number, y1: number,
     let dx = x - xx;
     let dy = y - yy;
     return Math.sqrt(dx * dx + dy * dy);
+}
+
+export const getAngleToLine = (x1: number, y1: number, x2: number, y2: number, x3: number, y3: number) =>
+    (Math.atan2(y3 - y1, x3 - x1) - Math.atan2(y2 - y1, x2 - x1));
+
+export const getPerpendicularBase = (startPoint: Coords2D, endPoint: Coords2D, pointX: number, pointY: number) => {
+
+    const startPointX = startPoint.x * scaleCorrection;
+    const startPointY = startPoint.y * scaleCorrection;
+
+    const distX = endPoint.x * scaleCorrection - startPointX;
+    const distY = endPoint.y * scaleCorrection - startPointY;
+
+    const powX = Math.pow(distX, 2);
+    const powY = Math.pow(distY, 2);
+
+    const x4 = (distX * distY * (pointY - startPointY) + startPointX * powY + pointX * powX) / (powY + powX);
+
+    const y4 = distY * (x4 - startPointX) / (distX) + startPointY;
+
+    return { x: x4, y: y4 }
 }
