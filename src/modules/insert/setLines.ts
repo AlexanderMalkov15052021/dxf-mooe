@@ -1,10 +1,11 @@
-import { scaleCorrection, firstPointId, firstLaneId, firstRoadId } from "@/constants";
+import { scaleCorrection, firstPointId } from "@/constants";
 import { road } from "@/helpers/elements/road";
 import { roadPoint } from "@/helpers/elements/roadPoint";
 import { getDistTwoPoints, isNearestPoints } from "@/helpers/math";
 import { Coords, MooeDoc } from "@/types";
 
-export const setLines = (mooeDoc: MooeDoc, lines: any, permission: number, inaccuracy: number, origin: Coords) => {
+export const setLines = (mooeDoc: MooeDoc, dxfIdsList: Record<string, string[]>, lines: any, permission: number,
+    inaccuracy: number, origin: Coords) => {
 
     const linePointsDiapason = lines?.map((obj: any) => {
 
@@ -42,7 +43,11 @@ export const setLines = (mooeDoc: MooeDoc, lines: any, permission: number, inacc
         const isPermission1 = obj1 && getDistTwoPoints(obj1.mLaneMarkXYZW.x, obj1.mLaneMarkXYZW.y, pointX1, pointY1) > inaccuracy;
         const isPermission2 = obj2 && getDistTwoPoints(obj2.mLaneMarkXYZW.x, obj2.mLaneMarkXYZW.y, pointX2, pointY2) > inaccuracy;
 
+        const ids = dxfIdsList[obj.handle];
+
         mooeDoc.mRoads.push(road(
+            ids ? Number(ids[0]) : 0,
+            ids ? Number(ids[1]) : 0,
             obj1Id,
             obj2Id,
             !obj1
@@ -51,10 +56,8 @@ export const setLines = (mooeDoc: MooeDoc, lines: any, permission: number, inacc
             !obj2
                 ? { x: pointX2, y: pointY2, z: pointZ2 }
                 : { x: obj2?.mLaneMarkXYZW.x, y: obj2?.mLaneMarkXYZW.y, z: obj2?.mLaneMarkXYZW.z },
-            mooeDoc.mRoads.length + firstLaneId,
             Math.PI / 2,
             obj.layer === "Bidirectional roads" ? 0 : 1,
-            mooeDoc.mRoads.length + firstRoadId,
             isPickUpLane ? 1 : 0
         ));
 
