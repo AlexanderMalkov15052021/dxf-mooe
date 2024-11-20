@@ -1,4 +1,5 @@
 import { emptyMooe } from '@/helpers/emptyMooe/emptyMooe';
+import { getDxfIdsList } from '@/helpers/get';
 import { getMooe } from '@/modules/modify/getMooe';
 import DxfParser from 'dxf-parser';
 
@@ -10,10 +11,12 @@ const sendDXF = (evt: any) => {
 
     const dxf = parser.parse(evt.data.dxfStr);
 
+    const dxfIdsList = getDxfIdsList(evt.data.dxfStr);
+
     console.log("dxf: ", dxf);
 
     const data = dxf
-        ? getMooe(dxf, evt.data.mooeDoc, evt.data.permission, evt.data.inaccuracy)
+        ? getMooe(dxf, dxfIdsList, evt.data.mooeDoc, evt.data.permission, evt.data.inaccuracy)
         : { mooeDoc: emptyMooe, diapasonPoints: [] };
 
     ctx.postMessage({

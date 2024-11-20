@@ -10,8 +10,9 @@ import { getDXFData } from "../extract/getDXFData";
 import { setCubicSpline } from "../insert/setCubicSpline";
 import { MooeDoc } from "@/types";
 import { setTargetPoints } from "../insert/setTargetPoints";
+import { setNewIds } from "../insert/setNewIds";
 
-export const getMooe = (dxf: IDxf, mooeDoc: MooeDoc, permission: string, inaccuracy: string) => {
+export const getMooe = (dxf: IDxf, dxfIdsList: Record<string, string[]>, mooeDoc: MooeDoc, permission: string, inaccuracy: string) => {
 
     const numPerm = Number(permission);
     const numInc = Number(inaccuracy);
@@ -20,7 +21,7 @@ export const getMooe = (dxf: IDxf, mooeDoc: MooeDoc, permission: string, inaccur
 
     const lines = [...DXFData.lines, ...DXFData.chargeLines, ...DXFData.restLines, ...DXFData.palletLines, ...DXFData.gateLines];
 
-    const linePointsDiapason = setLines(mooeDoc, lines, numPerm, numInc, DXFData.origin);
+    const linePointsDiapason = setLines(mooeDoc, dxfIdsList, lines, numPerm, numInc, DXFData.origin);
     const cubicSplinePointsDiapason = setCubicSpline(mooeDoc, DXFData.cubicSpline, numPerm, numInc, DXFData.origin);
     const quadraticSplinePointsDiapason = setQuadraticSpline(mooeDoc, DXFData.quadraticSpline, numPerm, numInc, DXFData.origin);
 
@@ -32,6 +33,8 @@ export const getMooe = (dxf: IDxf, mooeDoc: MooeDoc, permission: string, inaccur
     DXFData.targetPoints && setTargetPoints(mooeDoc, DXFData.targetPoints, lines, DXFData.origin);
 
     DXFData.layer && setLayerSize(mooeDoc, DXFData.layer, DXFData.origin);
+
+    setNewIds(mooeDoc);
 
     return { mooeDoc, diapasonPoints: [...linePointsDiapason, ...cubicSplinePointsDiapason, ...quadraticSplinePointsDiapason] };
 
