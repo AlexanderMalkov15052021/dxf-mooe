@@ -2,6 +2,7 @@ import { distToTargrtPoint, firstPointId, maxDist, scaleCorrection } from "@/con
 // import { prePoint } from "@/helpers/elements/prePoint";
 import { targetPoint } from "@/helpers/elements/targetPoint";
 import { windingPoint } from "@/helpers/elements/windingPoint";
+import { getRestingAndPointsIds } from "@/helpers/get";
 import { getAtan2, getDistPointToline, getPerpendicularBase } from "@/helpers/math";
 import { Coords, MooeDoc } from "@/types";
 
@@ -88,8 +89,10 @@ export const setRestPoints = (mooeDoc: MooeDoc, rests: any, restLines: any, line
             perpendicularBase.y
         );
 
+        const ids = getRestingAndPointsIds(obj.handle, mooeDoc.mLaneMarks.length, firstPointId);
+
         mooeDoc.mLaneMarks.push(windingPoint(
-            mooeDoc.mLaneMarks.length + firstPointId,
+            ids[0],
             angleToBasePoint ? pointX + (distToRoad * Math.cos(angleToBasePoint)) : pointX,
             angleToBasePoint ? pointY + (distToRoad * Math.sin(angleToBasePoint)) : pointY,
             angle,
@@ -97,7 +100,7 @@ export const setRestPoints = (mooeDoc: MooeDoc, rests: any, restLines: any, line
         ));
 
         mooeDoc.mLaneMarks.push(targetPoint(
-            mooeDoc.mLaneMarks.length + firstPointId,
+            ids[1],
             pointX + (distToTargrtPoint * Math.cos(angle)),
             pointY + (distToTargrtPoint * Math.sin(angle)),
             angle,
@@ -105,7 +108,7 @@ export const setRestPoints = (mooeDoc: MooeDoc, rests: any, restLines: any, line
         ));
 
         mooeDoc.mLaneMarks.push(targetPoint(
-            mooeDoc.mLaneMarks.length + firstPointId,
+            ids[2],
             lineData.line.vertices[1].x * scaleCorrection + (distToTargrtPoint * Math.cos(targetAngle)),
             lineData.line.vertices[1].y * scaleCorrection + (distToTargrtPoint * Math.sin(targetAngle)),
             targetAngle,

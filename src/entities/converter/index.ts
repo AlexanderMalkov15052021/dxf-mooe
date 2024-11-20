@@ -5,6 +5,7 @@ import { makeAutoObservable } from "mobx";
 import Worker from "worker-loader!@/workers/worker.ts";
 import DxfParser from 'dxf-parser';
 import { getMooe } from "@/modules/modify/getMooe";
+import { getDxfIdsList } from "@/helpers/get";
 
 class ConverterStor {
     isLoading: boolean = false;
@@ -218,15 +219,16 @@ class ConverterStor {
 
                 console.log("Web worker не поддерживается браузером!");
 
-
                 const parser = new DxfParser();
 
                 const dxf = parser.parse(this.dxfStr);
 
                 console.log("dxf: ", dxf);
 
+                const dxfIdsList = getDxfIdsList(this.dxfStr);
+
                 const data = dxf
-                    ? getMooe(dxf, this.mooeDoc, this.permission, this.inaccuracy)
+                    ? getMooe(dxf, dxfIdsList, this.mooeDoc, this.permission, this.inaccuracy)
                     : { mooeDoc: emptyMooe, diapasonPoints: [] };
 
                 data.diapasonPoints.length && this.setOpenFarPointsModal(true);
