@@ -1,8 +1,9 @@
+import { firstLaneId, valuesRange } from "@/constants";
 import { MooeDoc } from "@/types";
 
 export const getLaneIdsBuffer = (mooeDoc: MooeDoc) => {
 
-    const bufferIds = Array.from({ length: 100000 }, (_, index) => index + 700000);
+    const bufferIds = Array.from({ length: valuesRange }, (_, index) => index + firstLaneId);
 
     const mLaneMarkIds = mooeDoc?.mLaneMarks.map((obj: { mLaneMarkID: number }) => obj.mLaneMarkID);
     const mRoadIds = mooeDoc?.mRoads.map((obj: { mRoadID: number }) => obj.mRoadID);

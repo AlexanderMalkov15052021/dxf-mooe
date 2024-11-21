@@ -1,12 +1,12 @@
-import { distToTargrtPoint, firstPointId, maxDist, scaleCorrection } from "@/constants";
-// import { prePoint } from "@/helpers/elements/prePoint";
+import { distToTargrtPoint, maxDist, scaleCorrection } from "@/constants";
 import { targetPoint } from "@/helpers/elements/targetPoint";
 import { windingPoint } from "@/helpers/elements/windingPoint";
-import { getRestingAndPointsIds } from "@/helpers/get";
 import { getAtan2, getDistPointToline, getPerpendicularBase } from "@/helpers/math";
 import { Coords, MooeDoc } from "@/types";
 
-export const setRestPoints = (mooeDoc: MooeDoc, rests: any, restLines: any, lines: any, origin: Coords) => {
+export const setRestPoints = (
+    mooeDoc: MooeDoc, dxfIdsList: Record<string, string[]>, rests: any, restLines: any, lines: any, origin: Coords
+) => {
     rests?.map((obj: any) => {
 
         const pointX = (obj.position.x + origin.x) * scaleCorrection;
@@ -89,10 +89,10 @@ export const setRestPoints = (mooeDoc: MooeDoc, rests: any, restLines: any, line
             perpendicularBase.y
         );
 
-        const ids = getRestingAndPointsIds(obj.handle, mooeDoc.mLaneMarks.length, firstPointId);
+        const ids = dxfIdsList[obj.handle];
 
         mooeDoc.mLaneMarks.push(windingPoint(
-            ids[0],
+            ids ? Number(ids[0]) : 0,
             angleToBasePoint ? pointX + (distToRoad * Math.cos(angleToBasePoint)) : pointX,
             angleToBasePoint ? pointY + (distToRoad * Math.sin(angleToBasePoint)) : pointY,
             angle,
@@ -100,7 +100,7 @@ export const setRestPoints = (mooeDoc: MooeDoc, rests: any, restLines: any, line
         ));
 
         mooeDoc.mLaneMarks.push(targetPoint(
-            ids[1],
+            ids ? Number(ids[1]) : 0,
             pointX + (distToTargrtPoint * Math.cos(angle)),
             pointY + (distToTargrtPoint * Math.sin(angle)),
             angle,
@@ -108,22 +108,12 @@ export const setRestPoints = (mooeDoc: MooeDoc, rests: any, restLines: any, line
         ));
 
         mooeDoc.mLaneMarks.push(targetPoint(
-            ids[2],
+            ids ? Number(ids[2]) : 0,
             lineData.line.vertices[1].x * scaleCorrection + (distToTargrtPoint * Math.cos(targetAngle)),
             lineData.line.vertices[1].y * scaleCorrection + (distToTargrtPoint * Math.sin(targetAngle)),
             targetAngle,
             `${obj.text.replace(" ", "")}前置点`
         ));
-
-        // if (obj.text.includes("01")) {
-        //     mooeDoc.mLaneMarks.push(prePoint(
-        //         mooeDoc.mLaneMarks.length + firstPointId,
-        //         lineData.line.vertices[1].x * scaleCorrection - (distToTargrtPoint * 2 * Math.cos(angle - Math.PI / 2)),
-        //         lineData.line.vertices[1].y * scaleCorrection - (distToTargrtPoint * 2 * Math.sin(angle - Math.PI / 2)),
-        //         angle - Math.PI / 2,
-        //         `${obj.text.split("col")[0]}entrance`
-        //     ));
-        // }
 
     });
 }
