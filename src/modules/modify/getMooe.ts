@@ -45,7 +45,9 @@ export const getMooe = (dxf: IDxf, dxfIdsList: Record<string, string[]>, mooeDoc
         mooeDoc, dxfIdsList, DXFData.rests, DXFData.restLines, lines, DXFData.origin
     );
 
-    DXFData.chargeLines && setChargePoints(mooeDoc, DXFData.charges, DXFData.chargeLines, lines, DXFData.origin);
+    DXFData.chargeLines && setChargePoints(
+        mooeDoc, dxfIdsList, DXFData.charges, DXFData.chargeLines, lines, DXFData.origin
+    );
 
     DXFData.targetPoints && setTargetPoints(mooeDoc, DXFData.targetPoints, lines, DXFData.origin);
 
