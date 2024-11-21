@@ -1,11 +1,13 @@
-import { distToCachePoint, distToTargrtPoint, firstPointId, maxDist, scaleCorrection } from "@/constants";
+import { distToCachePoint, distToTargrtPoint, maxDist, scaleCorrection } from "@/constants";
 import { cachePoint } from "@/helpers/elements/cachePoint";
 import { targetPoint } from "@/helpers/elements/targetPoint";
 import { windingPoint } from "@/helpers/elements/windingPoint";
 import { getAtan2, getDistPointToline, getPerpendicularBase } from "@/helpers/math";
 import { Coords, MooeDoc } from "@/types";
 
-export const setStreamPallets = (mooeDoc: MooeDoc, pallete: any, palletLines: any, lines: any, origin: Coords) => {
+export const setStreamPallets = (
+    mooeDoc: MooeDoc, dxfIdsList: Record<string, string[]>, pallete: any, palletLines: any, lines: any, origin: Coords
+) => {
     pallete?.map((obj: any) => {
 
         const pointX = (obj.position.x + origin.x) * scaleCorrection;
@@ -88,16 +90,26 @@ export const setStreamPallets = (mooeDoc: MooeDoc, pallete: any, palletLines: an
             perpendicularBase.y
         );
 
+        const ids = dxfIdsList[obj.handle];
+
         mooeDoc.mLaneMarks.push(windingPoint(
-            mooeDoc.mLaneMarks.length + firstPointId,
+            ids ? Number(ids[0]) : 0,
             angleToBasePoint ? pointX + (distToRoad * Math.cos(angleToBasePoint)) : pointX,
             angleToBasePoint ? pointY + (distToRoad * Math.sin(angleToBasePoint)) : pointY,
             angle,
             obj.text.replace(" ", "")
         ));
 
+        mooeDoc.mLaneMarks.push(targetPoint(
+            ids ? Number(ids[1]) : 0,
+            pointX + (distToTargrtPoint * Math.cos(angle)),
+            pointY + (distToTargrtPoint * Math.sin(angle)),
+            angle,
+            `${obj.text.replace(" ", "")}检`
+        ));
+
         mooeDoc.mLaneMarks.push(cachePoint(
-            mooeDoc.mLaneMarks.length + firstPointId,
+            ids ? Number(ids[2]) : 0,
             pointX + (distToCachePoint * Math.cos(angle)),
             pointY + (distToCachePoint * Math.sin(angle)),
             angle,
@@ -105,15 +117,7 @@ export const setStreamPallets = (mooeDoc: MooeDoc, pallete: any, palletLines: an
         ));
 
         mooeDoc.mLaneMarks.push(targetPoint(
-            mooeDoc.mLaneMarks.length + firstPointId,
-            pointX + (distToTargrtPoint * Math.cos(angle)),
-            pointY + (distToTargrtPoint * Math.sin(angle)),
-            angle,
-            `${obj.text.replace(" ", "")}检`
-        ));
-
-        mooeDoc.mLaneMarks.push(targetPoint(
-            mooeDoc.mLaneMarks.length + firstPointId,
+            ids ? Number(ids[3]) : 0,
             lineData.line.vertices[1].x * scaleCorrection + (distToTargrtPoint * Math.cos(targetAngle)),
             lineData.line.vertices[1].y * scaleCorrection + (distToTargrtPoint * Math.sin(targetAngle)),
             targetAngle,

@@ -7,3 +7,4 @@ export const distToGatePrePoint = 0.2;
 export const firstPointId = 600000;
 export const firstLaneId = 700000;
 export const firstRoadId = 800000;
+export const valuesRange = 100000;
