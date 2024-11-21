@@ -1,10 +1,12 @@
-import { firstLaneId, firstPointId, firstRoadId, scaleCorrection } from "@/constants";
+import { firstPointId, scaleCorrection } from "@/constants";
 import { quadraticSpline } from "@/helpers/elements/quadraticSpline";
 import { roadPoint } from "@/helpers/elements/roadPoint";
 import { getDistTwoPoints, isNearestPoints } from "@/helpers/math";
 import { Coords, MooeDoc } from "@/types";
 
-export const setQuadraticSpline = (mooeDoc: MooeDoc, spline: any, permission: number, inaccuracy: number, origin: Coords) => {
+export const setQuadraticSpline = (
+    mooeDoc: MooeDoc, dxfIdsList: Record<string, string[]>, spline: any, permission: number, inaccuracy: number, origin: Coords
+) => {
 
     const linePointsDiapason = spline?.map((obj: any) => {
 
@@ -57,15 +59,17 @@ export const setQuadraticSpline = (mooeDoc: MooeDoc, spline: any, permission: nu
         const isPermission1 = obj1 && getDistTwoPoints(obj1.mLaneMarkXYZW.x, obj1.mLaneMarkXYZW.y, pointX1, pointY1) > inaccuracy;
         const isPermission2 = obj2 && getDistTwoPoints(obj2.mLaneMarkXYZW.x, obj2.mLaneMarkXYZW.y, pointX2, pointY2) > inaccuracy;
 
+        const ids = dxfIdsList[obj.handle];
+
         mooeDoc.mRoads.push(quadraticSpline(
             targetObj1?.mLaneMarkID ?? 0,
             targetObj2?.mLaneMarkID ?? 0,
             { x: targetObj1?.mLaneMarkXYZW.x, y: targetObj1?.mLaneMarkXYZW.y, z: targetObj1?.mLaneMarkXYZW.z },
             { x: targetObj2?.mLaneMarkXYZW.x, y: targetObj2?.mLaneMarkXYZW.y, z: targetObj2?.mLaneMarkXYZW.z },
-            mooeDoc.mRoads.length + firstLaneId,
+            ids ? Number(ids[1]) : 0,
             Math.PI / 2,
             1,
-            mooeDoc.mRoads.length + firstRoadId,
+            ids ? Number(ids[0]) : 0,
             {
                 x: (obj.controlPoints[1].x + origin.x) * scaleCorrection,
                 y: (obj.controlPoints[1].y + origin.y) * scaleCorrection,

@@ -21,14 +21,33 @@ export const getMooe = (dxf: IDxf, dxfIdsList: Record<string, string[]>, mooeDoc
 
     const lines = [...DXFData.lines, ...DXFData.chargeLines, ...DXFData.restLines, ...DXFData.palletLines, ...DXFData.gateLines];
 
-    const linePointsDiapason = setLines(mooeDoc, dxfIdsList, lines, numPerm, numInc, DXFData.origin);
-    const cubicSplinePointsDiapason = setCubicSpline(mooeDoc, DXFData.cubicSpline, numPerm, numInc, DXFData.origin);
-    const quadraticSplinePointsDiapason = setQuadraticSpline(mooeDoc, DXFData.quadraticSpline, numPerm, numInc, DXFData.origin);
+    const linePointsDiapason = setLines(
+        mooeDoc, dxfIdsList, lines, numPerm, numInc, DXFData.origin
+    );
 
-    DXFData.streamPallets && setStreamPallets(mooeDoc, DXFData.streamPallets, DXFData.palletLines, lines, DXFData.origin);
-    DXFData.gatePallets && setGatePallets(mooeDoc, DXFData.gatePallets, DXFData.gateLines, lines, DXFData.origin);
-    DXFData.rests && setRestPoints(mooeDoc, DXFData.rests, DXFData.restLines, lines, DXFData.origin);
-    DXFData.chargeLines && setChargePoints(mooeDoc, DXFData.charges, DXFData.chargeLines, lines, DXFData.origin);
+    const cubicSplinePointsDiapason = setCubicSpline(
+        mooeDoc, dxfIdsList, DXFData.cubicSpline, numPerm, numInc, DXFData.origin
+    );
+
+    const quadraticSplinePointsDiapason = setQuadraticSpline(
+        mooeDoc, dxfIdsList, DXFData.quadraticSpline, numPerm, numInc, DXFData.origin
+    );
+
+    DXFData.streamPallets && setStreamPallets(
+        mooeDoc, dxfIdsList, DXFData.streamPallets, DXFData.palletLines, lines, DXFData.origin
+    );
+
+    DXFData.gatePallets && setGatePallets(
+        mooeDoc, dxfIdsList, DXFData.gatePallets, DXFData.gateLines, lines, DXFData.origin
+    );
+
+    DXFData.rests && setRestPoints(
+        mooeDoc, dxfIdsList, DXFData.rests, DXFData.restLines, lines, DXFData.origin
+    );
+
+    DXFData.chargeLines && setChargePoints(
+        mooeDoc, dxfIdsList, DXFData.charges, DXFData.chargeLines, lines, DXFData.origin
+    );
 
     DXFData.targetPoints && setTargetPoints(mooeDoc, DXFData.targetPoints, lines, DXFData.origin);
 
