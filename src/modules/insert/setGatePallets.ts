@@ -1,11 +1,13 @@
-import { distToGateCachePoint, distToTargrtPoint, firstPointId, maxDist, scaleCorrection } from "@/constants";
+import { distToGateCachePoint, distToTargrtPoint, maxDist, scaleCorrection } from "@/constants";
 import { cachePoint } from "@/helpers/elements/cachePoint";
 import { targetPoint } from "@/helpers/elements/targetPoint";
 import { windingPoint } from "@/helpers/elements/windingPoint";
 import { getAtan2, getDistPointToline, getDistTwoPoints, getPerpendicularBase } from "@/helpers/math";
 import { Coords, MooeDoc } from "@/types";
 
-export const setGatePallets = (mooeDoc: MooeDoc, palletes: any, palletLines: any, lines: any, origin: Coords) => {
+export const setGatePallets = (
+    mooeDoc: MooeDoc, dxfIdsList: Record<string, string[]>, palletes: any, palletLines: any, lines: any, origin: Coords
+) => {
 
     const linesAndPallets = palletes.reduce((accum: any, pallet: any) => {
 
@@ -170,8 +172,11 @@ export const setGatePallets = (mooeDoc: MooeDoc, palletes: any, palletLines: any
             perpendicularBase.y
         );
 
+
+        const ids = dxfIdsList[linesAndPallets[key].pallet.handle];
+
         mooeDoc.mLaneMarks.push(windingPoint(
-            mooeDoc.mLaneMarks.length + firstPointId,
+            ids ? Number(ids[0]) : 0,
             angleToBasePoint ? pointX + (distToRoad * Math.cos(angleToBasePoint)) : pointX,
             angleToBasePoint ? pointY + (distToRoad * Math.sin(angleToBasePoint)) : pointY,
             targetLinesAndPallets[key].angle,
@@ -179,7 +184,7 @@ export const setGatePallets = (mooeDoc: MooeDoc, palletes: any, palletLines: any
         ));
 
         mooeDoc.mLaneMarks.push(cachePoint(
-            mooeDoc.mLaneMarks.length + firstPointId,
+            ids ? Number(ids[2]) : 0,
             pointX + (distToGateCachePoint * Math.cos(targetLinesAndPallets[key].angle)),
             pointY + (distToGateCachePoint * Math.sin(targetLinesAndPallets[key].angle)),
             targetLinesAndPallets[key].angle,
@@ -187,7 +192,7 @@ export const setGatePallets = (mooeDoc: MooeDoc, palletes: any, palletLines: any
         ));
 
         mooeDoc.mLaneMarks.push(targetPoint(
-            mooeDoc.mLaneMarks.length + firstPointId,
+            ids ? Number(ids[3]) : 0,
             targetLinesAndPallets[key].baseLine.vertices[1].x * scaleCorrection + (distToTargrtPoint * Math.cos(targetAngle)),
             targetLinesAndPallets[key].baseLine.vertices[1].y * scaleCorrection + (distToTargrtPoint * Math.sin(targetAngle)),
             targetAngle,
@@ -195,7 +200,7 @@ export const setGatePallets = (mooeDoc: MooeDoc, palletes: any, palletLines: any
         ));
 
         mooeDoc.mLaneMarks.push(targetPoint(
-            mooeDoc.mLaneMarks.length + firstPointId,
+            ids ? Number(ids[1]) : 0,
             basePointX + (distToGateCachePoint * Math.cos(targetLinesAndPallets[key].angle)),
             basePointY + (distToGateCachePoint * Math.sin(targetLinesAndPallets[key].angle)),
             targetLinesAndPallets[key].angle,
@@ -203,23 +208,5 @@ export const setGatePallets = (mooeDoc: MooeDoc, palletes: any, palletLines: any
         ));
 
     });
-
-    // const textParts = obj.text.split("col");
-    // const gate = textParts[0];
-    // const col = textParts[1].split("row")[0];
-    // const gateCol = col[0] === "0" ? Number(col[1]) : Number(col);
-
-
-    // if (obj.text.includes("row09") && gateCols[gate] === gateCol) {
-    //     mooeDoc.mLaneMarks.push(prePoint(
-    //         mooeDoc.mLaneMarks.length + firstPointId,
-    //         lineData.line.vertices[1].x * scaleCorrection + (distToGatePrePoint * 2 * Math.cos(angle + Math.PI / 2)),
-    //         lineData.line.vertices[1].y * scaleCorrection + (distToGatePrePoint * 2 * Math.sin(angle + Math.PI / 2)),
-    //         angle - Math.PI / 2,
-    //         `${obj.text.split("col")[0]}entrance`
-    //     ));
-    // }
-
-    // });
 
 }

@@ -37,7 +37,9 @@ export const getMooe = (dxf: IDxf, dxfIdsList: Record<string, string[]>, mooeDoc
         mooeDoc, dxfIdsList, DXFData.streamPallets, DXFData.palletLines, lines, DXFData.origin
     );
 
-    DXFData.gatePallets && setGatePallets(mooeDoc, DXFData.gatePallets, DXFData.gateLines, lines, DXFData.origin);
+    DXFData.gatePallets && setGatePallets(
+        mooeDoc, dxfIdsList, DXFData.gatePallets, DXFData.gateLines, lines, DXFData.origin
+    );
 
     DXFData.rests && setRestPoints(
         mooeDoc, dxfIdsList, DXFData.rests, DXFData.restLines, lines, DXFData.origin
