@@ -8,11 +8,12 @@ import { setRestPoints } from "../insert/setRestPoints";
 import { setChargePoints } from "../insert/setChargePoints";
 import { getDXFData } from "../extract/getDXFData";
 import { setCubicSpline } from "../insert/setCubicSpline";
-import { MooeDoc } from "@/types";
+import { DxfIdsData, MooeDoc } from "@/types";
 import { setTargetPoints } from "../insert/setTargetPoints";
-import { setNewIds } from "../insert/setNewIds";
 
-export const getMooe = (dxf: IDxf, dxfIdsList: Record<string, string[]>, mooeDoc: MooeDoc, permission: string, inaccuracy: string) => {
+export const getMooe = (dxf: IDxf, dxfIdsData: DxfIdsData, mooeDoc: MooeDoc, permission: string, inaccuracy: string) => {
+    const dxfIdsList = dxfIdsData.dxfIdsList;
+    const dxfIdsBuff = dxfIdsData.dxfIdsBuff;
 
     const numPerm = Number(permission);
     const numInc = Number(inaccuracy);
@@ -22,15 +23,15 @@ export const getMooe = (dxf: IDxf, dxfIdsList: Record<string, string[]>, mooeDoc
     const lines = [...DXFData.lines, ...DXFData.chargeLines, ...DXFData.restLines, ...DXFData.palletLines, ...DXFData.gateLines];
 
     const linePointsDiapason = setLines(
-        mooeDoc, dxfIdsList, lines, numPerm, numInc, DXFData.origin
+        mooeDoc, dxfIdsList, dxfIdsBuff, lines, numPerm, numInc, DXFData.origin
     );
 
     const cubicSplinePointsDiapason = setCubicSpline(
-        mooeDoc, dxfIdsList, DXFData.cubicSpline, numPerm, numInc, DXFData.origin
+        mooeDoc, dxfIdsList, dxfIdsBuff, DXFData.cubicSpline, numPerm, numInc, DXFData.origin
     );
 
     const quadraticSplinePointsDiapason = setQuadraticSpline(
-        mooeDoc, dxfIdsList, DXFData.quadraticSpline, numPerm, numInc, DXFData.origin
+        mooeDoc, dxfIdsList, dxfIdsBuff, DXFData.quadraticSpline, numPerm, numInc, DXFData.origin
     );
 
     DXFData.streamPallets && setStreamPallets(
@@ -52,8 +53,6 @@ export const getMooe = (dxf: IDxf, dxfIdsList: Record<string, string[]>, mooeDoc
     DXFData.targetPoints && setTargetPoints(mooeDoc, DXFData.targetPoints, lines, DXFData.origin);
 
     DXFData.layer && setLayerSize(mooeDoc, DXFData.layer, DXFData.origin);
-
-    setNewIds(mooeDoc);
 
     return { mooeDoc, diapasonPoints: [...linePointsDiapason, ...cubicSplinePointsDiapason, ...quadraticSplinePointsDiapason] };
 

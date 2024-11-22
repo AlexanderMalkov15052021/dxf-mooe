@@ -1,88 +1,147 @@
-import { firstPointId, scaleCorrection } from "@/constants";
+import { scaleCorrection } from "@/constants";
 import { quadraticSpline } from "@/helpers/elements/quadraticSpline";
 import { roadPoint } from "@/helpers/elements/roadPoint";
 import { getDistTwoPoints, isNearestPoints } from "@/helpers/math";
-import { Coords, MooeDoc } from "@/types";
+import { Coords, dxfIdsBuff, laneMark, MooeDoc } from "@/types";
+
+const getTargetId = (mooeDoc: MooeDoc, buff: dxfIdsBuff, x: number, y: number, newPoints: number[], obj?: laneMark) => {
+
+    if (!obj) {
+        mooeDoc.mLaneMarks.push(roadPoint(buff.pointIds[newPoints.length], x, y, Math.PI / 2));
+        newPoints.push(buff.pointIds[newPoints.length]);
+        return buff.pointIds[newPoints.length - 1];
+    }
+    else {
+        return obj.mLaneMarkID;
+    }
+
+}
 
 export const setQuadraticSpline = (
-    mooeDoc: MooeDoc, dxfIdsList: Record<string, string[]>, spline: any, permission: number, inaccuracy: number, origin: Coords
+    mooeDoc: MooeDoc, dxfIdsList: Record<string, string[]>, dxfIdsBuff: dxfIdsBuff, spline: any,
+    permission: number, inaccuracy: number, origin: Coords
 ) => {
+
+    const newRoads: number[] = [];
+    const newLanes: number[] = [];
+    const newPoints: number[] = [];
 
     const linePointsDiapason = spline?.map((obj: any) => {
 
         const pointX1 = (obj.controlPoints[0].x + origin.x) * scaleCorrection;
         const pointY1 = (obj.controlPoints[0].y + origin.y) * scaleCorrection;
+        const pointZ1 = (obj.controlPoints[0].z + origin.z) * scaleCorrection;
 
         const pointX2 = (obj.controlPoints[2].x + origin.x) * scaleCorrection;
         const pointY2 = (obj.controlPoints[2].y + origin.y) * scaleCorrection;
+        const pointZ2 = (obj.controlPoints[2].z + origin.z) * scaleCorrection;
 
-        const obj1 = mooeDoc.mLaneMarks.find(
-            (point: any) => isNearestPoints(
-                pointX1,
-                pointY1,
-                point.mLaneMarkXYZW.x,
-                point.mLaneMarkXYZW.y,
-                permission
-            )
-        );
+        const ids = dxfIdsList[obj.handle.toLocaleLowerCase()];
 
-        const newObj1 = roadPoint(
-            mooeDoc.mLaneMarks.length + firstPointId,
-            pointX1,
-            pointY1,
-            Math.PI / 2
-        );
+        if (ids?.length) {
 
-        const obj2 = mooeDoc.mLaneMarks.find(
-            (point: any) => isNearestPoints(
-                pointX2,
-                pointY2,
-                point.mLaneMarkXYZW.x,
-                point.mLaneMarkXYZW.y,
-                permission
-            )
-        );
+            const id0 = Number(ids[0]);
+            const id1 = Number(ids[1]);
+            const id2 = Number(ids[2]);
+            const id3 = Number(ids[3]);
 
-        const newObj2 = roadPoint(
-            mooeDoc.mLaneMarks.length + firstPointId,
-            pointX2,
-            pointY2,
-            Math.PI / 2
-        );
+            const obj1 = mooeDoc.mLaneMarks.find((obj: laneMark) => obj.mLaneMarkID === id2);
+            const obj2 = mooeDoc.mLaneMarks.find((obj: laneMark) => obj.mLaneMarkID === id3);
 
-        const targetObj1 = !obj1 ? newObj1 : obj1;
-        const targetObj2 = !obj2 ? newObj2 : obj2;
+            !obj1 && mooeDoc.mLaneMarks.push(roadPoint(id2, pointX1, pointY1, Math.PI / 2));
 
-        targetObj1 === newObj1 && mooeDoc.mLaneMarks.push(newObj1);
-        targetObj2 === newObj2 && mooeDoc.mLaneMarks.push(newObj2);
+            !obj2 && mooeDoc.mLaneMarks.push(roadPoint(id3, pointX2, pointY2, Math.PI / 2));
 
-        const isPermission1 = obj1 && getDistTwoPoints(obj1.mLaneMarkXYZW.x, obj1.mLaneMarkXYZW.y, pointX1, pointY1) > inaccuracy;
-        const isPermission2 = obj2 && getDistTwoPoints(obj2.mLaneMarkXYZW.x, obj2.mLaneMarkXYZW.y, pointX2, pointY2) > inaccuracy;
+            mooeDoc.mRoads.push(quadraticSpline(
+                obj1 ? obj1.mLaneMarkID : id2,
+                obj2 ? obj2.mLaneMarkID : id3,
+                obj1
+                    ? { x: obj1?.mLaneMarkXYZW.x, y: obj1?.mLaneMarkXYZW.y, z: obj1?.mLaneMarkXYZW.z }
+                    : { x: pointX1, y: pointY1, z: pointZ1 },
+                obj2
+                    ? { x: obj2?.mLaneMarkXYZW.x, y: obj2?.mLaneMarkXYZW.y, z: obj2?.mLaneMarkXYZW.z }
+                    : { x: pointX2, y: pointY2, z: pointZ2 },
+                id1,
+                Math.PI / 2,
+                1,
+                id0,
+                {
+                    x: (obj.controlPoints[1].x + origin.x) * scaleCorrection,
+                    y: (obj.controlPoints[1].y + origin.y) * scaleCorrection,
+                    z: (obj.controlPoints[1].z + origin.z) * scaleCorrection
+                }
+            ));
 
-        const ids = dxfIdsList[obj.handle];
+            const isPermission1 = obj1 && getDistTwoPoints(obj1.mLaneMarkXYZW.x, obj1.mLaneMarkXYZW.y, pointX1, pointY1) > inaccuracy;
+            const isPermission2 = obj2 && getDistTwoPoints(obj2.mLaneMarkXYZW.x, obj2.mLaneMarkXYZW.y, pointX2, pointY2) > inaccuracy;
 
-        mooeDoc.mRoads.push(quadraticSpline(
-            targetObj1?.mLaneMarkID ?? 0,
-            targetObj2?.mLaneMarkID ?? 0,
-            { x: targetObj1?.mLaneMarkXYZW.x, y: targetObj1?.mLaneMarkXYZW.y, z: targetObj1?.mLaneMarkXYZW.z },
-            { x: targetObj2?.mLaneMarkXYZW.x, y: targetObj2?.mLaneMarkXYZW.y, z: targetObj2?.mLaneMarkXYZW.z },
-            ids ? Number(ids[1]) : 0,
-            Math.PI / 2,
-            1,
-            ids ? Number(ids[0]) : 0,
-            {
-                x: (obj.controlPoints[1].x + origin.x) * scaleCorrection,
-                y: (obj.controlPoints[1].y + origin.y) * scaleCorrection,
-                z: (obj.controlPoints[1].z + origin.z) * scaleCorrection
-            }
-        ));
+            const objPos1 = isPermission1 && { x: obj1.mLaneMarkXYZW.x, y: obj1.mLaneMarkXYZW.y, z: obj1.mLaneMarkXYZW.z };
+            const objPos2 = isPermission2 && { x: obj2.mLaneMarkXYZW.x, y: obj2.mLaneMarkXYZW.y, z: obj2.mLaneMarkXYZW.z };
 
-        const objPos1 = isPermission1 && { x: obj1.mLaneMarkXYZW.x, y: obj1.mLaneMarkXYZW.y, z: obj1.mLaneMarkXYZW.z };
-        const objPos2 = isPermission2 && { x: obj2.mLaneMarkXYZW.x, y: obj2.mLaneMarkXYZW.y, z: obj2.mLaneMarkXYZW.z };
+            return [objPos1, objPos2];
 
-        return [objPos1, objPos2];
+        }
+        else {
+
+            const obj1 = mooeDoc.mLaneMarks.find(
+                (point: any) => isNearestPoints(
+                    pointX1,
+                    pointY1,
+                    point.mLaneMarkXYZW.x,
+                    point.mLaneMarkXYZW.y,
+                    permission
+                )
+            );
+
+            const obj2 = mooeDoc.mLaneMarks.find(
+                (point: any) => isNearestPoints(
+                    pointX2,
+                    pointY2,
+                    point.mLaneMarkXYZW.x,
+                    point.mLaneMarkXYZW.y,
+                    permission
+                )
+            );
+
+            const startId = getTargetId(mooeDoc, dxfIdsBuff, pointX1, pointY1, newPoints, obj1);
+            const endId = getTargetId(mooeDoc, dxfIdsBuff, pointX2, pointY2, newPoints, obj2);
+
+            mooeDoc.mRoads.push(quadraticSpline(
+                startId,
+                endId,
+                obj1
+                    ? { x: obj1?.mLaneMarkXYZW.x, y: obj1?.mLaneMarkXYZW.y, z: obj1?.mLaneMarkXYZW.z }
+                    : { x: pointX1, y: pointY1, z: pointZ1 },
+                obj2
+                    ? { x: obj2?.mLaneMarkXYZW.x, y: obj2?.mLaneMarkXYZW.y, z: obj2?.mLaneMarkXYZW.z }
+                    : { x: pointX2, y: pointY2, z: pointZ2 },
+                dxfIdsBuff.laneIds[newLanes.length],
+                Math.PI / 2,
+                1,
+                dxfIdsBuff.roadIds[newRoads.length],
+                {
+                    x: (obj.controlPoints[1].x + origin.x) * scaleCorrection,
+                    y: (obj.controlPoints[1].y + origin.y) * scaleCorrection,
+                    z: (obj.controlPoints[1].z + origin.z) * scaleCorrection
+                }
+            ));
+
+            !ids?.length && newRoads.push(dxfIdsBuff.roadIds[newRoads.length]) && newLanes.push(dxfIdsBuff.laneIds[newLanes.length]);
+
+            const isPermission1 = obj1 && getDistTwoPoints(obj1.mLaneMarkXYZW.x, obj1.mLaneMarkXYZW.y, pointX1, pointY1) > inaccuracy;
+            const isPermission2 = obj2 && getDistTwoPoints(obj2.mLaneMarkXYZW.x, obj2.mLaneMarkXYZW.y, pointX2, pointY2) > inaccuracy;
+
+            const objPos1 = isPermission1 && { x: obj1.mLaneMarkXYZW.x, y: obj1.mLaneMarkXYZW.y, z: obj1.mLaneMarkXYZW.z };
+            const objPos2 = isPermission2 && { x: obj2.mLaneMarkXYZW.x, y: obj2.mLaneMarkXYZW.y, z: obj2.mLaneMarkXYZW.z };
+
+            return [objPos1, objPos2];
+        }
 
     }).flat().filter((item: any) => item);
+
+    dxfIdsBuff.roadIds = dxfIdsBuff.roadIds.filter(id => !newRoads.includes(id));
+    dxfIdsBuff.laneIds = dxfIdsBuff.laneIds.filter(id => !newLanes.includes(id));
+    dxfIdsBuff.pointIds = dxfIdsBuff.pointIds.filter(id => !newPoints.includes(id));
 
     return linePointsDiapason;
 }
