@@ -5,7 +5,7 @@ import { makeAutoObservable } from "mobx";
 import Worker from "worker-loader!@/workers/worker.ts";
 import DxfParser from 'dxf-parser';
 import { getMooe } from "@/modules/modify/getMooe";
-import { getDxfIdsList } from "@/helpers/get";
+import { getDxfIdsData } from "@/helpers/get";
 
 class ConverterStor {
     isLoading: boolean = false;
@@ -225,10 +225,10 @@ class ConverterStor {
 
                 console.log("dxf: ", dxf);
 
-                const dxfIdsList = getDxfIdsList(this.dxfStr);
+                const dxfIdsData = getDxfIdsData(this.dxfStr);
 
                 const data = dxf
-                    ? getMooe(dxf, dxfIdsList, this.mooeDoc, this.permission, this.inaccuracy)
+                    ? getMooe(dxf, dxfIdsData, this.mooeDoc, this.permission, this.inaccuracy)
                     : { mooeDoc: emptyMooe, diapasonPoints: [] };
 
                 data.diapasonPoints.length && this.setOpenFarPointsModal(true);
