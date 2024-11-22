@@ -1,4 +1,6 @@
+import { firstLaneId, firstPointId, firstRoadId, valuesRange } from "@/constants";
 import { getStrFromHex } from "../math";
+import { dxfIdsBuff, DxfIdsData } from "@/types";
 
 export const getDirRoad = (str: string) => {
 
@@ -64,12 +66,19 @@ export const getRestingAndPointsIds = (id: string, pointsLength: number, firstPo
 
 }
 
-export const getDxfIdsList = (docStr: string) => {
+export const getDxfIdsData = (docStr: string): DxfIdsData => {
 
     const dividerStr = "fixed id: ";
 
     if (!docStr.includes(dividerStr)) {
-        return {};
+        return {
+            dxfIdsList: {},
+            dxfIdsBuff: {
+                roadIds: [],
+                laneIds: [],
+                pointIds: []
+            }
+        }
     }
 
     const lineBreak = "\n";
@@ -80,12 +89,67 @@ export const getDxfIdsList = (docStr: string) => {
 
     const ids = docStrParts.map((str: string) => str.substring(0, str.indexOf(lineBreak)).split(" "));
 
-    return ids.reduce((accum: Record<string, string[]>, arr: string[]) => {
+    const dxfIds = ids.reduce((
+        accum: {
+            dxfIdsList: Record<string, string[]>,
+            objIds: {
+                roadIds: number[],
+                laneIds: number[],
+                pointIds: number[]
+            }
+        },
+        arr: string[]
+    ) => {
 
-        const [first, ...rest] = arr;
+        const [first, second, ...rest] = arr;
 
-        accum[first] = [...rest];
+        accum.dxfIdsList[second] = [...rest];
+
+        if (first === "road") {
+            accum.objIds.roadIds.push(Number(rest[0]));
+            accum.objIds.laneIds.push(Number(rest[1]));
+            accum.objIds.pointIds.push(Number(rest[2]), Number(rest[3]));
+
+            
+        }
+
+        if (first === "point") {
+            accum.objIds.pointIds.push(...rest.map(id => Number(id)));
+        }
 
         return accum;
-    }, {});
+    }, {
+        dxfIdsList: {},
+        objIds: {
+            roadIds: [],
+            laneIds: [],
+            pointIds: []
+        }
+    });
+
+    const dxfIdsBuff: dxfIdsBuff = {
+        roadIds: [],
+        laneIds: [],
+        pointIds: [],
+    };
+
+    const bufferRoadsIds = Array.from({ length: valuesRange }, (_, index) => index + firstRoadId);
+    const bufferLanesIds = Array.from({ length: valuesRange }, (_, index) => index + firstLaneId);
+    const bufferPointsIds = Array.from({ length: valuesRange }, (_, index) => index + firstPointId);
+
+    dxfIdsBuff.roadIds = bufferRoadsIds.filter((id: number) => !dxfIds.objIds.roadIds?.includes(id))
+        .filter((id: number) => !dxfIds.objIds.laneIds?.includes(id))
+        .filter((id: number) => !dxfIds.objIds.pointIds?.includes(id));
+
+    dxfIdsBuff.laneIds = bufferLanesIds.filter((id: number) => !dxfIds.objIds.roadIds?.includes(id))
+        .filter((id: number) => !dxfIds.objIds.laneIds?.includes(id))
+        .filter((id: number) => !dxfIds.objIds.pointIds?.includes(id));
+
+    dxfIdsBuff.pointIds = [...new Set(bufferPointsIds.filter((id: number) => !dxfIds.objIds.roadIds?.includes(id))
+        .filter((id: number) => !dxfIds.objIds.laneIds?.includes(id))
+        .filter((id: number) => !dxfIds.objIds.pointIds?.includes(id)))];
+
+    const result: DxfIdsData = { dxfIdsList: dxfIds.dxfIdsList, dxfIdsBuff };
+
+    return result;
 }

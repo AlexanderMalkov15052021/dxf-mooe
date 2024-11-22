@@ -1,3 +1,28 @@
+export type laneMark = {
+    mAvoidPointID?: null;
+    mBindRoadGroups?: never[];
+    mID?: null;
+    mIsJockeyEndpoint: boolean;
+    mLaneMarkDescript: string;
+    mLaneMarkEnName: string;
+    mLaneMarkID: number;
+    mLaneMarkName: string;
+    mLaneMarkSize?: { height: number; length: number; width: number; } |
+    { height: number; length: number; width: number; } |
+    { height: number; length: number; width: number; };
+    mLaneMarkType: number;
+    mLaneMarkWidth: number;
+    mLaneMarkXYZW: { w: number; x: any; y: any; z: number; } |
+    { w: number; x: any; y: any; z: number; } |
+    { w: number; x: any; y: any; z: number; } |
+    { w: number; x: any; y: any; z: number; } |
+    { w: number; x: any; y: any; z: number; } |
+    { w: number; x: any; y: any; z: number; };
+    mMapName?: string;
+    mPrepointID?: null;
+    mTaskListName?: string;
+    neighborsID: never[];
+}
 
 export interface MSceneMap {
     mGridMsg: MGridMsg
@@ -151,31 +176,7 @@ export interface RobotNum {
 
 export type MooeDoc = {
     // mAreas: MArea[];
-    mLaneMarks: {
-        mAvoidPointID?: null;
-        mBindRoadGroups?: never[];
-        mID?: null;
-        mIsJockeyEndpoint: boolean;
-        mLaneMarkDescript: string;
-        mLaneMarkEnName: string;
-        mLaneMarkID: number;
-        mLaneMarkName: string;
-        mLaneMarkSize?: { height: number; length: number; width: number; } |
-        { height: number; length: number; width: number; } |
-        { height: number; length: number; width: number; };
-        mLaneMarkType: number;
-        mLaneMarkWidth: number;
-        mLaneMarkXYZW: { w: number; x: number; y: number; z: number; } |
-        { w: number; x: any; y: any; z: number; } |
-        { w: number; x: any; y: any; z: number; } |
-        { w: number; x: any; y: any; z: number; } |
-        { w: number; x: any; y: any; z: number; } |
-        { w: number; x: any; y: any; z: number; };
-        mMapName?: string;
-        mPrepointID?: null;
-        mTaskListName?: string;
-        neighborsID: never[];
-    }[];
+    mLaneMarks: laneMark[];
     mRoads: {
         mBelongJunctionID: number;
         mEndPosition: { x: any; y: any; z: number; } |
@@ -367,4 +368,15 @@ export type FieldType = {
     moeePointY: string;
     inaccuracy: string;
     permission: string;
+};
+
+export type dxfIdsBuff = {
+    roadIds: number[];
+    laneIds: number[];
+    pointIds: number[];
+};
+
+export type DxfIdsData = {
+    dxfIdsList: Record<string, string[]>;
+    dxfIdsBuff: dxfIdsBuff;
 };
