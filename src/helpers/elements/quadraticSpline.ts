@@ -2,7 +2,7 @@ import { Coords } from "@/types"
 
 export const quadraticSpline = (
     startId: number, endId: number, startPoint: Coords, endPoint: Coords, id: number, angle: number, roadDir: number,
-    roadID: number, controlPoint: any
+    roadID: number, controlPoint: any, roadLength: number
 ) => {
     return {
         "mBelongJunctionID": -1,
@@ -39,7 +39,7 @@ export const quadraticSpline = (
                 "mLanePro": 0,
                 "mLaneType": 1,
                 "mLeftAvoidanceArea": 0.1,
-                "mLength": 2.1025919389595202,
+                "mLength": roadLength,
                 "mMaxCurvature": 0.918637766482173,
                 "mObstacleDistance": 0.1,
                 "mObstacleWidth": 0.1,
@@ -58,7 +58,7 @@ export const quadraticSpline = (
                 }
             }
         ],
-        "mLength": 1,
+        "mLength": roadLength,
         "mRForbiddenLine": [],
         "mRForbiddenLineID": -1,
         "mRoadID": roadID,
