@@ -2,7 +2,7 @@ import { Coords } from "@/types"
 
 export const road = (
     roadID: number, laneID: number, startId: number, endId: number, startPoint: Coords, endPoint: Coords, angle: number,
-    roadDir: number, roadType: number
+    roadDir: number, roadType: number, roadLength: number
 ) => {
     return {
         "mBelongJunctionID": -1,
@@ -33,7 +33,7 @@ export const road = (
                 "mLanePro": roadType,
                 "mLaneType": 0,
                 "mLeftAvoidanceArea": 0.1,
-                "mLength": 10,
+                "mLength": roadLength,
                 "mObstacleDistance": 0.1,
                 "mObstacleWidth": 0.1,
                 "mPlannerAgain": false,
@@ -51,7 +51,7 @@ export const road = (
                 }
             }
         ],
-        "mLength": 10,
+        "mLength": roadLength,
         "mRForbiddenLine": [],
         "mRForbiddenLineID": -1,
         "mRoadID": roadID,

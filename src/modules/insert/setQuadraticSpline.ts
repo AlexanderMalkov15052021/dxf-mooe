@@ -1,7 +1,7 @@
 import { scaleCorrection } from "@/constants";
 import { quadraticSpline } from "@/helpers/elements/quadraticSpline";
 import { roadPoint } from "@/helpers/elements/roadPoint";
-import { getDistTwoPoints, isNearestPoints } from "@/helpers/math";
+import { getDistTwoPoints, isNearestPoints, quadraticBezierLength } from "@/helpers/math";
 import { Coords, dxfIdsBuff, laneMark, MooeDoc } from "@/types";
 
 const getTargetId = (mooeDoc: MooeDoc, buff: dxfIdsBuff, x: number, y: number, newPoints: number[], obj?: laneMark) => {
@@ -52,24 +52,36 @@ export const setQuadraticSpline = (
 
             !obj2 && mooeDoc.mLaneMarks.push(roadPoint(id3, pointX2, pointY2, Math.PI / 2));
 
+
+            const startPoint = obj1
+                ? { x: obj1?.mLaneMarkXYZW.x, y: obj1?.mLaneMarkXYZW.y, z: obj1?.mLaneMarkXYZW.z }
+                : { x: pointX1, y: pointY1, z: pointZ1 };
+
+            const endPoint = obj2
+                ? { x: obj2?.mLaneMarkXYZW.x, y: obj2?.mLaneMarkXYZW.y, z: obj2?.mLaneMarkXYZW.z }
+                : { x: pointX2, y: pointY2, z: pointZ2 };
+
+            const controlPoint = {
+                x: (obj.controlPoints[1].x + origin.x) * scaleCorrection,
+                y: (obj.controlPoints[1].y + origin.y) * scaleCorrection,
+                z: (obj.controlPoints[1].z + origin.z) * scaleCorrection
+            }
+
+
+            const roadLength = quadraticBezierLength(startPoint, endPoint, controlPoint);
+
+
             mooeDoc.mRoads.push(quadraticSpline(
                 obj1 ? obj1.mLaneMarkID : id2,
                 obj2 ? obj2.mLaneMarkID : id3,
-                obj1
-                    ? { x: obj1?.mLaneMarkXYZW.x, y: obj1?.mLaneMarkXYZW.y, z: obj1?.mLaneMarkXYZW.z }
-                    : { x: pointX1, y: pointY1, z: pointZ1 },
-                obj2
-                    ? { x: obj2?.mLaneMarkXYZW.x, y: obj2?.mLaneMarkXYZW.y, z: obj2?.mLaneMarkXYZW.z }
-                    : { x: pointX2, y: pointY2, z: pointZ2 },
+                startPoint,
+                endPoint,
                 id1,
                 Math.PI / 2,
                 1,
                 id0,
-                {
-                    x: (obj.controlPoints[1].x + origin.x) * scaleCorrection,
-                    y: (obj.controlPoints[1].y + origin.y) * scaleCorrection,
-                    z: (obj.controlPoints[1].z + origin.z) * scaleCorrection
-                }
+                controlPoint,
+                roadLength
             ));
 
             const isPermission1 = obj1 && getDistTwoPoints(obj1.mLaneMarkXYZW.x, obj1.mLaneMarkXYZW.y, pointX1, pointY1) > inaccuracy;
@@ -106,24 +118,37 @@ export const setQuadraticSpline = (
             const startId = getTargetId(mooeDoc, dxfIdsBuff, pointX1, pointY1, newPoints, obj1);
             const endId = getTargetId(mooeDoc, dxfIdsBuff, pointX2, pointY2, newPoints, obj2);
 
+
+
+            const startPoint = obj1
+                ? { x: obj1?.mLaneMarkXYZW.x, y: obj1?.mLaneMarkXYZW.y, z: obj1?.mLaneMarkXYZW.z }
+                : { x: pointX1, y: pointY1, z: pointZ1 };
+
+            const endPoint = obj2
+                ? { x: obj2?.mLaneMarkXYZW.x, y: obj2?.mLaneMarkXYZW.y, z: obj2?.mLaneMarkXYZW.z }
+                : { x: pointX2, y: pointY2, z: pointZ2 };
+
+            const controlPoint = {
+                x: (obj.controlPoints[1].x + origin.x) * scaleCorrection,
+                y: (obj.controlPoints[1].y + origin.y) * scaleCorrection,
+                z: (obj.controlPoints[1].z + origin.z) * scaleCorrection
+            }
+
+
+            const roadLength = quadraticBezierLength(startPoint, endPoint, controlPoint);
+
+
             mooeDoc.mRoads.push(quadraticSpline(
                 startId,
                 endId,
-                obj1
-                    ? { x: obj1?.mLaneMarkXYZW.x, y: obj1?.mLaneMarkXYZW.y, z: obj1?.mLaneMarkXYZW.z }
-                    : { x: pointX1, y: pointY1, z: pointZ1 },
-                obj2
-                    ? { x: obj2?.mLaneMarkXYZW.x, y: obj2?.mLaneMarkXYZW.y, z: obj2?.mLaneMarkXYZW.z }
-                    : { x: pointX2, y: pointY2, z: pointZ2 },
+                startPoint,
+                endPoint,
                 dxfIdsBuff.laneIds[newLanes.length],
                 Math.PI / 2,
                 1,
                 dxfIdsBuff.roadIds[newRoads.length],
-                {
-                    x: (obj.controlPoints[1].x + origin.x) * scaleCorrection,
-                    y: (obj.controlPoints[1].y + origin.y) * scaleCorrection,
-                    z: (obj.controlPoints[1].z + origin.z) * scaleCorrection
-                }
+                controlPoint,
+                roadLength
             ));
 
             !ids?.length && newRoads.push(dxfIdsBuff.roadIds[newRoads.length]) && newLanes.push(dxfIdsBuff.laneIds[newLanes.length]);
