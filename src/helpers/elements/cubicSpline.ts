@@ -2,7 +2,7 @@ import { Coords } from "@/types"
 
 export const cubicSpline = (
     startId: number, endId: number, startPoint: Coords, endPoint: Coords, id: number, angle: number, roadDir: number,
-    roadID: number, controlPoint1: any, controloint2: any
+    roadID: number, controlPoint1: any, controloint2: any, roadLength: number
 ) => {
     return {
         "mBelongJunctionID": -1,
@@ -34,7 +34,7 @@ export const cubicSpline = (
                 "mLanePro": 0,
                 "mLaneType": 2,
                 "mLeftAvoidanceArea": 0.1,
-                "mLength": null,
+                "mLength": roadLength,
                 "mMaxCurvature": null,
                 "mObstacleDistance": 0.1,
                 "mObstacleWidth": 0.1,
@@ -63,7 +63,7 @@ export const cubicSpline = (
                 }
             }
         ],
-        "mLength": null,
+        "mLength": roadLength,
         "mRForbiddenLine": [],
         "mRForbiddenLineID": -1,
         "mRoadID": roadID,

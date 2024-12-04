@@ -53,20 +53,30 @@ export const setLines = (mooeDoc: MooeDoc, dxfIdsList: Record<string, string[]>,
 
             !obj2 && mooeDoc.mLaneMarks.push(roadPoint(id3, pointX2, pointY2, Math.PI / 2));
 
+
+            const startPoint = obj1
+                ? { x: obj1?.mLaneMarkXYZW.x, y: obj1?.mLaneMarkXYZW.y, z: obj1?.mLaneMarkXYZW.z }
+                : { x: pointX1, y: pointY1, z: pointZ1 };
+
+            const endPoint = obj2
+                ? { x: obj2?.mLaneMarkXYZW.x, y: obj2?.mLaneMarkXYZW.y, z: obj2?.mLaneMarkXYZW.z }
+                : { x: pointX2, y: pointY2, z: pointZ2 };
+
+
+            const roadLength = getDistTwoPoints(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
+
+
             mooeDoc.mRoads.push(road(
                 id0,
                 id1,
                 obj1 ? obj1.mLaneMarkID : id2,
                 obj2 ? obj2.mLaneMarkID : id3,
-                obj1
-                    ? { x: obj1?.mLaneMarkXYZW.x, y: obj1?.mLaneMarkXYZW.y, z: obj1?.mLaneMarkXYZW.z }
-                    : { x: pointX1, y: pointY1, z: pointZ1 },
-                obj2
-                    ? { x: obj2?.mLaneMarkXYZW.x, y: obj2?.mLaneMarkXYZW.y, z: obj2?.mLaneMarkXYZW.z }
-                    : { x: pointX2, y: pointY2, z: pointZ2 },
+                startPoint,
+                endPoint,
                 Math.PI / 2,
                 obj.layer === "Bidirectional roads" ? 0 : 1,
-                isPickUpLane ? 1 : 0
+                isPickUpLane ? 1 : 0,
+                roadLength
             ));
 
             const isPermission1 = obj1 && getDistTwoPoints(obj1.mLaneMarkXYZW.x, obj1.mLaneMarkXYZW.y, pointX1, pointY1) > inaccuracy;
@@ -102,20 +112,30 @@ export const setLines = (mooeDoc: MooeDoc, dxfIdsList: Record<string, string[]>,
             const startId = getTargetId(mooeDoc, dxfIdsBuff, pointX1, pointY1, newPoints, obj1);
             const endId = getTargetId(mooeDoc, dxfIdsBuff, pointX2, pointY2, newPoints, obj2);
 
+
+            const startPoint = obj1
+                ? { x: obj1?.mLaneMarkXYZW.x, y: obj1?.mLaneMarkXYZW.y, z: obj1?.mLaneMarkXYZW.z }
+                : { x: pointX1, y: pointY1, z: pointZ1 };
+
+            const endPoint = obj2
+                ? { x: obj2?.mLaneMarkXYZW.x, y: obj2?.mLaneMarkXYZW.y, z: obj2?.mLaneMarkXYZW.z }
+                : { x: pointX2, y: pointY2, z: pointZ2 };
+
+
+            const roadLength = getDistTwoPoints(startPoint.x, startPoint.y, endPoint.x, endPoint.y);
+
+
             mooeDoc.mRoads.push(road(
                 dxfIdsBuff.roadIds[newRoads.length],
                 dxfIdsBuff.laneIds[newLanes.length],
                 startId,
                 endId,
-                obj1
-                    ? { x: obj1?.mLaneMarkXYZW.x, y: obj1?.mLaneMarkXYZW.y, z: obj1?.mLaneMarkXYZW.z }
-                    : { x: pointX1, y: pointY1, z: pointZ1 },
-                obj2
-                    ? { x: obj2?.mLaneMarkXYZW.x, y: obj2?.mLaneMarkXYZW.y, z: obj2?.mLaneMarkXYZW.z }
-                    : { x: pointX2, y: pointY2, z: pointZ2 },
+                startPoint,
+                endPoint,
                 Math.PI / 2,
                 obj.layer === "Bidirectional roads" ? 0 : 1,
-                isPickUpLane ? 1 : 0
+                isPickUpLane ? 1 : 0,
+                roadLength
             ));
 
             newRoads.push(dxfIdsBuff.roadIds[newRoads.length]);
